@@ -1,0 +1,5 @@
+rootProject.name = 'auction-seller'
+
+include':module-common'
+
+project(':module-common').projectDir = new File(settingsDir,'../module-common')
