@@ -6,13 +6,9 @@ import com.example.auctionseller.model.ShoppingMallModel;
 import com.example.auctionseller.repository.ShoppingMallModelRepositry;
 import com.example.modulecommon.jwtutil.JWTUtil;
 import com.example.modulecommon.makefile.MakeFile;
-import com.example.modulecommon.model.SellerCoupon;
-import com.example.modulecommon.model.UserModel;
-import com.example.modulecommon.repository.SellerCouponRepository;
-import com.example.modulecommon.repository.UserModelRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 @Service
 public class SellerService {
-
-    private final SellerCouponRepository sellerCouponRepository;
-    //권한 등록을 바꿔줘야함
-    private final UserModelRepository userModelRepository;
 
     private final ShoppingMallModelRepositry shoppingMallModelRepositry;
 

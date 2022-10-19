@@ -2,8 +2,7 @@ package com.example.auctionseller.config;
 
 
 import com.example.auctionseller.filter.LocalHostCheckFilter;
-import com.example.modulecommon.repository.JwtSuperintendRepository;
-import com.example.modulecommon.repository.UserModelRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,9 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 @Configuration
 public class AdvancedSecurityConfig {
 
-    private final UserModelRepository userModelRepository;
 
-    private final JwtSuperintendRepository jwtSuperintendRepository;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
