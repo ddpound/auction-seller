@@ -1,7 +1,6 @@
 package com.example.auctionseller.model;
 
 
-import com.example.modulecommon.model.UserModel;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -25,9 +24,8 @@ public class ShoppingMallModel {
 
     private String shoppingMallExplanation;
 
-    @JoinColumn(name = "create_user")
-    @OneToOne
-    private UserModel userModel;
+    @Column(unique = true , nullable = false)
+    private String username;
 
     // 사진 경로를 남길듯
     @Column(length = 1000)

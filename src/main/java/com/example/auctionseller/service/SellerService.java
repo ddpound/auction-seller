@@ -24,47 +24,6 @@ public class SellerService {
 
     private final JWTUtil jwtUtil;
 
-    @Transactional
-    public int sellerRegister(HttpServletRequest request, String id, String code){
-
-        String jwtHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String token = jwtHeader.replace("Bearer ", "");
-
-        DecodedJWT decodedJWT = jwtUtil.getTokenRole(token);
-
-        System.out.println(decodedJWT.getClaim("username").asString());
-
-        UserModel userModel = userModelRepository.findByUsername(decodedJWT.getClaim("username").asString());
-
-        SellerCoupon findSellerCoupon = null;
-        try {
-            findSellerCoupon = sellerCouponRepository.findByIdAndCouponPassword(Integer.parseInt(id),code);
-        }catch (NumberFormatException e){
-            return -5; // id가 String이 아닐때
-        }
-
-
-        // 키값이 날라오지 않음
-        if(id.equals("") && code.equals("")){
-            return -3;
-        }
-
-        // 등록된쿠폰 아님
-        if(findSellerCoupon ==null){
-            return -1;
-        }
-
-        // 만약 이미 등록된 쿠폰 이라는 뜻
-        if(findSellerCoupon.getUserModel() != null){
-            return -2;
-        }
-
-        // 새쿠폰이라면 그럼 쿠폰 등록자를 해주자
-        findSellerCoupon.setUserModel(userModel);
-        userModel.setRoles("ROLE_USER,ROLE_SELLER");
-        return 1;
-    }
-
     @Transactional(readOnly = true)
     public ShoppingMallFront checkShoppingMall(HttpServletRequest request){
         String jwtHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
