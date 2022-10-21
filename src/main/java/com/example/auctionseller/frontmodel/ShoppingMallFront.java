@@ -1,16 +1,18 @@
 package com.example.auctionseller.frontmodel;
 
-import com.example.modulecommon.model.UserModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class ShoppingMallFront {
+
     private int id;
 
     private String shoppingMallName;
@@ -19,5 +21,6 @@ public class ShoppingMallFront {
 
     private String thumnail;
 
-    private UserModel userModel;
+    @Column(nullable = false, unique = true)
+    private String username;
 }

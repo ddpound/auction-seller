@@ -1,14 +1,19 @@
 package com.example.auctionseller.userinterface;
 
+import com.example.modulecommon.frontModel.UserModelFront;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 
-import java.util.List;
 
 @FeignClient(name = "auction-user")
 public interface AuctionUserInterFace {
 
-    @GetMapping("/auction-user/user/info")
-    List<String> getUser();
+    @GetMapping("/user/info/{userid}")
+    ResponseEntity<UserModelFront> findUserModelFront(@RequestHeader("Authorization")String token,
+                                                      @RequestHeader("RefreshToken") String reToken,
+                                                      @PathVariable int userid);
 
 }
