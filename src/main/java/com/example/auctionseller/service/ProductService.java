@@ -1,5 +1,6 @@
 package com.example.auctionseller.service;
 
+import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.auctionseller.model.ProductModel;
 import com.example.auctionseller.model.ShoppingMallModel;
@@ -211,7 +212,7 @@ public class ProductService {
         String token = jwtHeader.replace("Bearer ", "");
         String reToken = jwtHeader.replace("Bearer ", "");
 
-        DecodedJWT decodedJWT = jwtUtil.getTokenRole(token);
+        DecodedJWT decodedJWT = JWT.decode(token);
 
         ResponseEntity<UserModelFront> findFrontUserModel = auctionUserInterFace
                 .findUserModelFront(jwtHeader,jwtRHeader,decodedJWT.getClaim("userId").asInt());

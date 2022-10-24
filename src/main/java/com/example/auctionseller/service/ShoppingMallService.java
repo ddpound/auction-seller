@@ -1,5 +1,6 @@
 package com.example.auctionseller.service;
 
+import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.auctionseller.model.ProductModel;
 import com.example.auctionseller.model.ShoppingMallModel;
@@ -55,11 +56,10 @@ public class ShoppingMallService {
 
         String jwtHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String token = jwtHeader.replace("Bearer ", "");
-        DecodedJWT decodedJWT = jwtUtil.getTokenRole(token);
 
         // 따옴표로 저장됨
-        String username = decodedJWT.getClaim("username").toString().replaceAll("\"", "");;
-
+        String username = JWT.decode(token).getClaim("username").toString().replaceAll("\"", "");;
+        int userId = JWT.decode(token).getClaim("userId").asInt();
         // 12길이보다 길면
         if(shoppingmallName.length() > 12){
             return -5;
@@ -76,7 +76,7 @@ public class ShoppingMallService {
         // 파일저장
         // 1. url 사진 경로
         // 2. 컴퓨터 사진 파일 경로
-        Map<Integer,String> fileNames = makeFile.makeFileImage(decodedJWT.getClaim("userId").asInt(), multipartFile,request);
+        Map<Integer,String> fileNames = makeFile.makeFileImage(userId, multipartFile,request);
 
 
         ShoppingMallModel shoppingMallModelSave =

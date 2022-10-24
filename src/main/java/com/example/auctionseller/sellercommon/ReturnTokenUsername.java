@@ -1,5 +1,6 @@
 package com.example.auctionseller.sellercommon;
 
+import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.modulecommon.jwtutil.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class ReturnTokenUsername {
         String token = jwtHeader.replace("Bearer ", "");
         String reToken = jwtHeader.replace("Bearer ", "");
 
-        DecodedJWT decodedJWT = jwtUtil.getTokenRole(token);
+        DecodedJWT decodedJWT = JWT.decode(token);
 
         // request헤더로 긁어온 username값에는 [] 이게 붙음
         String username = decodedJWT
