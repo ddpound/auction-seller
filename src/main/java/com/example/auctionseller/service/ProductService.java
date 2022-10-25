@@ -210,7 +210,7 @@ public class ProductService {
         String jwtRHeader = request.getHeader("RefreshToken");
 
         String token = jwtHeader.replace("Bearer ", "");
-        String reToken = jwtHeader.replace("Bearer ", "");
+        //String reToken = jwtRHeader.replace("Bearer ", "");
 
         DecodedJWT decodedJWT = JWT.decode(token);
 

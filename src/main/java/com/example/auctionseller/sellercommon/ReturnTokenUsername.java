@@ -35,10 +35,9 @@ public class ReturnTokenUsername {
     public Map<Integer, Object> tokenGetUsername(HttpServletRequest request){
 
         String jwtHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String jwtRHeader = request.getHeader("RefreshToken");
 
         String token = jwtHeader.replace("Bearer ", "");
-        String reToken = jwtHeader.replace("Bearer ", "");
+
 
         DecodedJWT decodedJWT = JWT.decode(token);
 
