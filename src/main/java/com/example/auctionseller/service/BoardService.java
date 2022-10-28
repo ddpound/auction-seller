@@ -100,6 +100,20 @@ public class BoardService {
             // 영속화
             Optional<CommonModel> commonModel = commonModelRepository.findById(boardId);
 
+            if(commonModel.isEmpty()){
+                log.info("not found board , Modifer : " + returnMapUserData.get(1));
+                return -2; // 수정하려는 게시판이 없음
+            }
+
+            // 수정하려는 자와 게시판 작성자의 이름 비교
+            if(!returnMapUserData.get(1).equals(commonModel.get().getShoppingMall().getUsername())){
+                log.info("Author and Modifier are not the same");
+                log.info("Board Author : " + commonModel.get().getShoppingMall().getUsername());
+                log.info("Modifier : " + returnMapUserData.get(1));
+                // 수정자와 작성된 작성자의 아이디가 같지않음
+                return -3;
+            }
+
             //수정인데 썸네일이 있다면
             if(thumbnail != null){
                 returnPathNams = makeFile.makeFileImage((Integer)returnMapUserData.get(2),thumbnail,request);
@@ -174,9 +188,9 @@ public class BoardService {
 
         if(commonModel.isPresent()){
             // 삭제하려는 유저와 제품의 유저가 달라 -2를 반환
-            // 리스트의 길이가 3이 아닐때 즉 어드민이 아니면서 해당 사용자의 제품이 아니라면
+            // 리스트의 길이가 3이 아닐때 즉 어드민이 아니면서 해당 사용자의 제품이 아니라면 -2 반환
             if(!commonModel.get().getShoppingMall().getUsername().equals((String)returnMapUserData.get(1))
-                    && userModelFront.getBody().getRole().equals("ADMIN")){
+                    && !userModelFront.getBody().getRole().equals("ADMIN")){
                 return -2;
             }
             // 썸네일이 있을 때

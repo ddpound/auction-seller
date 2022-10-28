@@ -221,10 +221,18 @@ public class ProductService {
         // 동시에 영속화
         Optional<ProductModel> productModel = productModelRepository.findById(productId);
 
+        if(productModel.isEmpty()){
+            log.info("not found Product, found try id :" + productId);
+            return -3; // 값이 없어요
+        }
+
         // 삭제하려는 유저와 제품의 유저가 달라 -2를 반환
         // 리스트의 길이가 3이 아닐때 즉 어드민이 아니면서 해당 사용자의 제품이 아니라면
         if(productModel.get().getShoppingMall().getUsername().equals(findFrontUserModel.getBody().getUserName())
                 && findFrontUserModel.getBody().getRole().equals("ADMIN")){
+            log.info("seller not same");
+            log.info("this product seller : " + productModel.get().getShoppingMall().getUsername());
+            log.info("try seller : " + findFrontUserModel.getBody().getUserName());
             return -2;
         }
 

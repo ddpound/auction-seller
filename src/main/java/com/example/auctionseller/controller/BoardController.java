@@ -44,18 +44,26 @@ public class BoardController {
         int resultNum = boardService.saveBoard(title,content,thumbnail,categoryId,request,modify,boardId);
 
         if(resultNum == 1 ){
+
+            if(modify){
+                log.info("success modify");
+            }else {
+                log.info("success save");
+            }
             return new ResponseEntity<>("OK", HttpStatus.OK);
+        }else{
+            if(resultNum == -3 ){
+                return new ResponseEntity<>("You used more than 10 pictures", HttpStatus.OK);
+            }
+
+            if(resultNum == -4 || resultNum == -5 ){
+                return new ResponseEntity<>("Picture Error", HttpStatus.BAD_REQUEST);
+            }
+
+            return new ResponseEntity<>("Server Or Client Request Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if(resultNum == -3 ){
-            return new ResponseEntity<>("You used more than 10 pictures", HttpStatus.OK);
-        }
 
-        if(resultNum == -4 || resultNum == -5 ){
-            return new ResponseEntity<>("Picture Error", HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>("Server Or Client Request Error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @DeleteMapping(value = "delete-seller-board/{id}")
