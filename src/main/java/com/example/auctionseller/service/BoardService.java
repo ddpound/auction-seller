@@ -1,15 +1,11 @@
 package com.example.auctionseller.service;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.auctionseller.model.BoardCategory;
 import com.example.auctionseller.model.CommonModel;
+import com.example.auctionseller.model.CommonReplyModel;
 import com.example.auctionseller.model.ShoppingMallModel;
-import com.example.auctionseller.repository.BoardCategoryRepository;
-import com.example.auctionseller.repository.CommonModelRepository;
-import com.example.auctionseller.repository.ProductModelRepository;
-import com.example.auctionseller.repository.ShoppingMallModelRepositry;
-import com.example.auctionseller.sellercommon.ReturnTokenUsername;
+import com.example.auctionseller.repository.*;
+import com.example.auctionseller.sellercommon.SellerReturnTokenUsername;
 import com.example.auctionseller.userinterface.AuctionUserInterFace;
 import com.example.modulecommon.enums.AuthNames;
 import com.example.modulecommon.frontModel.UserModelFront;
@@ -18,12 +14,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +32,7 @@ public class BoardService {
 
     private final MakeFile makeFile;
 
-    private final ReturnTokenUsername returnTokenUsername;
+    private final SellerReturnTokenUsername sellerReturnTokenUsername;
 
     private final ProductModelRepository productModelRepository;
 
@@ -47,6 +41,10 @@ public class BoardService {
     private final CommonModelRepository commonModelRepository;
 
     private final BoardCategoryRepository boardCategoryRepository;
+
+    private final CommonReplyRepsitory commonReplyRepsitory;
+
+    private final ReplyofReplyRepository replyofReplyRepository;
 
     // 카테고리를 만들었을때 이름이 똑같으면, 알아서 만들어지도록할지..아니면...음..
     /**
@@ -64,7 +62,7 @@ public class BoardService {
                          boolean modify,
                          Integer boardId){
 
-        Map<Integer, Object> returnMapUserData = returnTokenUsername.tokenGetUsername(request);
+        Map<Integer, Object> returnMapUserData = sellerReturnTokenUsername.tokenGetUsername(request);
 
 
         // 어디 쇼핑몰의 글을 저장할지 찾아냄
@@ -176,7 +174,7 @@ public class BoardService {
 
         String token = jwtHeader.replace("Bearer ", "");
 
-        Map<Integer, Object> returnMapUserData = returnTokenUsername.tokenGetUsername(request);
+        Map<Integer, Object> returnMapUserData = sellerReturnTokenUsername.tokenGetUsername(request);
 
         // 유저의 권한을 찾아야함
         ResponseEntity<UserModelFront> userModelFront =
@@ -186,33 +184,41 @@ public class BoardService {
         // 동시에 영속화
         Optional<CommonModel> commonModel = commonModelRepository.findById(boardId);
 
-        if(commonModel.isPresent()){
-            // 삭제하려는 유저와 제품의 유저가 달라 -2를 반환
-            // 리스트의 길이가 3이 아닐때 즉 어드민이 아니면서 해당 사용자의 제품이 아니라면 -2 반환
-            if(!commonModel.get().getShoppingMall().getUsername().equals((String)returnMapUserData.get(1))
-                    && !userModelFront.getBody().getRole().equals("ADMIN")){
-                return -2;
+        try {
+            if(commonModel.isPresent()){
+                // 삭제하려는 유저와 제품의 유저가 달라 -2를 반환
+                // 리스트의 길이가 3이 아닐때 즉 어드민이 아니면서 해당 사용자의 제품이 아니라면 -2 반환
+                if(!commonModel.get().getShoppingMall().getUsername().equals((String)returnMapUserData.get(1))
+                        && !userModelFront.getBody().getRole().equals("ADMIN")){
+                    return -2;
+                }
+                // 썸네일이 있을 때
+                if(commonModel.get().getPictureFilePath().length() >0){
+                    // 썸네일 파일 삭제
+                    String filepathString = commonModel.get().getPictureFilePath();
+
+                    makeFile.filePathImageDelete(filepathString);
+
+                }
+
+                if(commonModel.get().getFilefolderPath().length() >0){
+                    makeFile.folderPathImageDelete(commonModel.get().getFilefolderPath());
+                }
+
+                //마지막 단계에 삭제
+
+                // 사진을 담아놓는 폴더 경로를 통해 파일 삭제
+                commonModelRepository.delete(commonModel.get());
+                return 1;
+
+
             }
-            // 썸네일이 있을 때
-            if(commonModel.get().getPictureFilePath().length() >0){
-                // 썸네일 파일 삭제
-                String filepathString = commonModel.get().getPictureFilePath();
 
-                makeFile.filePathImageDelete(filepathString);
-
-            }
-            if(commonModel.get().getFilefolderPath().length() >0){
-                makeFile.folderPathImageDelete(commonModel.get().getFilefolderPath());
-            }
-
-            //마지막 단계에 삭제
-
-            // 사진을 담아놓는 폴더 경로를 통해 파일 삭제
-            commonModelRepository.delete(commonModel.get());
-            return 1;
-
-
+        }catch (Exception e){
+            log.error(e);
+            return -1;
         }
+
 
         return -1;
     }
@@ -220,7 +226,7 @@ public class BoardService {
     @Transactional(readOnly = true)
     public List<BoardCategory> getBoardCategoryList(HttpServletRequest request){
 
-        Map<Integer, Object> returnMapUserData = returnTokenUsername.tokenGetUsername(request);
+        Map<Integer, Object> returnMapUserData = sellerReturnTokenUsername.tokenGetUsername(request);
 
         // 현재 접속중인 유저의 쇼핑몰을 검색
         ShoppingMallModel shoppingMallModel = shoppingMallModelRepositry.findByUsername((String) returnMapUserData.get(1));
@@ -232,7 +238,7 @@ public class BoardService {
     @Transactional
     public int saveBoardCategory(HttpServletRequest request, String categoryName){
 
-        Map<Integer, Object> returnMapUserData = returnTokenUsername.tokenGetUsername(request);
+        Map<Integer, Object> returnMapUserData = sellerReturnTokenUsername.tokenGetUsername(request);
 
         if(categoryName.contains(" ")){
             return -2; // 공백검사
@@ -265,7 +271,7 @@ public class BoardService {
     @Transactional
     public int modifyBoardCategory(HttpServletRequest request, String categoryName){
 
-        Map<Integer, Object> returnMapUserData = returnTokenUsername.tokenGetUsername(request);
+        Map<Integer, Object> returnMapUserData = sellerReturnTokenUsername.tokenGetUsername(request);
         ShoppingMallModel shoppingMallModel = shoppingMallModelRepositry.findByUsername((String) returnMapUserData.get(1));
 
         // 영속화
@@ -280,6 +286,32 @@ public class BoardService {
             return -1; // 특정에러
         }
 
+
+        return 1;
+    }
+
+    /**
+     * 댓글 저장 메소드
+     * */
+    @Transactional
+    public int saveReply(String content,
+                         int userId,
+                         String nickName,
+                         int commonModelId,
+                         HttpServletRequest request){
+        Map<Integer, Object> returnMapUserData = sellerReturnTokenUsername.tokenGetUsername(request);
+
+        Optional<CommonModel> findCommonModel =  commonModelRepository.findById(commonModelId);
+
+        if(findCommonModel.isPresent()){
+            CommonReplyModel commonReplyModel
+                    = CommonReplyModel.builder()
+                    .content(content)
+                    .userId(userId)
+                    .nickName(nickName)
+                    .commonModel(findCommonModel.get())
+                    .build();
+        }
 
         return 1;
     }

@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public interface ProductModelRepository extends JpaRepository<ProductModel,Integer> {
 
-
     List<ProductModel> findAllByShoppingMall(Optional<ShoppingMallModel> shoppingMallModel);
     List<ProductModel> findAllByShoppingMall(ShoppingMallModel shoppingMallModel);
 }

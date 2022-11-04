@@ -20,7 +20,7 @@ import java.util.Map;
 @Log4j2
 @RequiredArgsConstructor
 @Component
-public class ReturnTokenUsername {
+public class SellerReturnTokenUsername {
 
 
     private final JWTUtil jwtUtil;

@@ -31,7 +31,6 @@ public class ShoppingMallServiceAll {
 
     @Transactional(readOnly = true)
     public Optional<ShoppingMallModel> findShoppingMall(int shoppingMall){
-
         return shoppingMallModelRepositry.findById(shoppingMall);
     }
 
@@ -56,7 +55,7 @@ public class ShoppingMallServiceAll {
      * 판매자가 작성한 글의 리스트를 가져와주는 함수
      * */
     @Transactional(readOnly = true)
-    public List<CommonModel> findAllCommonModel(int shoppingMallId){
+    public List<CommonModel> findAllCommonModel(Integer shoppingMallId){
 
         Optional<ShoppingMallModel>shoppingMallModel = shoppingMallModelRepositry.findById(shoppingMallId);
 
@@ -69,6 +68,8 @@ public class ShoppingMallServiceAll {
     @Transactional(readOnly = true)
     public CommonModel findCommonModel(int boardId){
         Optional<CommonModel> commonModel =  commonModelRepository.findById(boardId);
+        commonModel.ifPresent(model -> model.getShoppingMall().setUsername(""));
+
         // 만약 결과값이 없다면 null을 반환
         return commonModel.orElse(null);
     }

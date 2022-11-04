@@ -6,7 +6,7 @@ import com.example.auctionseller.model.ProductModel;
 import com.example.auctionseller.model.ShoppingMallModel;
 import com.example.auctionseller.repository.ProductModelRepository;
 import com.example.auctionseller.repository.ShoppingMallModelRepositry;
-import com.example.auctionseller.sellercommon.ReturnTokenUsername;
+import com.example.auctionseller.sellercommon.SellerReturnTokenUsername;
 import com.example.auctionseller.userinterface.AuctionUserInterFace;
 import com.example.modulecommon.enums.AuthNames;
 import com.example.modulecommon.frontModel.UserModelFront;
@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,7 +37,7 @@ public class ProductService {
 
     private final JWTUtil jwtUtil;
 
-    private final ReturnTokenUsername returnTokenUsername;
+    private final SellerReturnTokenUsername sellerReturnTokenUsername;
 
     private final ProductModelRepository productModelRepository;
 
@@ -54,7 +53,7 @@ public class ProductService {
                            HttpServletRequest request,
                            boolean modify) {
 
-        Map returnmap = returnTokenUsername.tokenGetUsername(request);
+        Map returnmap = sellerReturnTokenUsername.tokenGetUsername(request);
 
 
         StringBuilder productFilePath = new StringBuilder();

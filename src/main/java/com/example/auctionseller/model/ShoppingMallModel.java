@@ -1,6 +1,10 @@
 package com.example.auctionseller.model;
 
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -11,8 +15,8 @@ import java.sql.Timestamp;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
 @Getter
+@Setter
 @Entity
 public class ShoppingMallModel {
 
@@ -25,6 +29,7 @@ public class ShoppingMallModel {
     private String shoppingMallExplanation;
 
     @Column(unique = true , nullable = false)
+    @JsonIgnore
     private String username;
 
     // 사진 경로를 남길듯
@@ -46,5 +51,6 @@ public class ShoppingMallModel {
 
     @UpdateTimestamp
     private Timestamp modifyShoppingMall;
+
 
 }

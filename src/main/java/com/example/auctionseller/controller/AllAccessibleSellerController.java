@@ -2,6 +2,7 @@ package com.example.auctionseller.controller;
 
 
 import com.example.auctionseller.model.ShoppingMallModel;
+import com.example.auctionseller.model.frontdto.FrontShppingMallDto;
 import com.example.auctionseller.service.ShoppingMallService;
 import com.example.auctionseller.service.ShoppingMallServiceAll;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @RequiredArgsConstructor
@@ -33,10 +35,11 @@ public class AllAccessibleSellerController {
     // 여러개를 요청해야함
     // 1. 해당 쇼핑몰 정보, 2. 해당쇼핑몰이 가진 제품들 전부다 나열
     // 해당 쇼핑몰을 알면
-    @GetMapping(value = "show-shoppingmall")
-    public ResponseEntity showShoppingMall(@RequestParam("id")int shoppingMallId){
-
-        return new ResponseEntity(shoppingMallServiceAll.findShoppingMall(shoppingMallId), HttpStatus.OK);
+    @GetMapping(value = "show-shoppingmall", produces = "application/json; charset=UTF8")
+    public ResponseEntity<FrontShppingMallDto> showShoppingMall(@RequestParam("id")int shoppingMallId){
+        ShoppingMallModel shoppingMallModel = shoppingMallServiceAll.findShoppingMall(shoppingMallId).orElse(null);
+        FrontShppingMallDto frontShppingMallDto = new FrontShppingMallDto(Objects.requireNonNull(shoppingMallModel));
+        return new ResponseEntity<>(frontShppingMallDto , HttpStatus.OK);
     }
 
     @GetMapping(value = "show-shoppingmall/find-product-all/{id}")

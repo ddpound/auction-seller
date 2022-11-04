@@ -1,31 +1,22 @@
 package com.example.auctionseller.service;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.auctionseller.model.ProductModel;
 import com.example.auctionseller.model.ShoppingMallModel;
 import com.example.auctionseller.repository.ProductModelRepository;
 import com.example.auctionseller.repository.ShoppingMallModelRepositry;
-import com.example.auctionseller.sellercommon.ReturnTokenUsername;
-import com.example.modulecommon.enums.AuthNames;
+import com.example.auctionseller.sellercommon.SellerReturnTokenUsername;
 import com.example.modulecommon.jwtutil.JWTUtil;
 import com.example.modulecommon.makefile.MakeFile;
-import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -38,7 +29,7 @@ public class ShoppingMallService {
 
     private final JWTUtil jwtUtil;
 
-    private final ReturnTokenUsername returnTokenUsername;
+    private final SellerReturnTokenUsername sellerReturnTokenUsername;
 
     private final ProductModelRepository productModelRepository;
 
@@ -109,9 +100,7 @@ public class ShoppingMallService {
                                   String urlFilePath,
                                   HttpServletRequest request){
 
-        Map returnmap = returnTokenUsername.tokenGetUsername(request);
-
-
+        Map<Integer,Object> returnmap = sellerReturnTokenUsername.tokenGetUsername(request);
 
         // 12길이보다 길면
         if(shoppingMallName.length() > 12){
