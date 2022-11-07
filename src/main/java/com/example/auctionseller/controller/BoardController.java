@@ -119,15 +119,22 @@ public class BoardController {
     }
 
     @PostMapping(value = "save-reply")
-    public ResponseEntity saveReply(HttpServletRequest request,
+    public ResponseEntity<String> saveReply(HttpServletRequest request,
                                     @RequestParam(value="content", required=false)String content,
                                     @RequestParam(value="userId", required=false)int userId,
-                                    @RequestParam(value="nickName", required=false)String username,
+                                    @RequestParam(value="nickName", required=false)String nickName,
                                     @RequestParam(value="boardId", required=false)int boardId){
+        System.out.println("여기가지 도달하나?22");
+        int resultNum = boardService.saveReply(content,userId,nickName,boardId,request);
+
+        if(resultNum ==1 ){
+            return new ResponseEntity<>("success save reply", HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>("fail save reply", HttpStatus.BAD_REQUEST);
+        }
 
 
 
-        return new ResponseEntity<>("success modify category", HttpStatus.OK);
     }
 
 }
