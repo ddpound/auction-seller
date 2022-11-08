@@ -23,9 +23,7 @@ public class CommonReplyOfReplyModel {
 
     private String nickName;
 
-    @ManyToOne
-    @JoinColumn(name = "commonReplyModelId")
-    private CommonReplyModel commonReplyModel;
+    private int commonModelReplyId;
 
     @CreationTimestamp
     private Timestamp createDate;

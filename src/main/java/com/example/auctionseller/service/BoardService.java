@@ -309,9 +309,12 @@ public class BoardService {
                     .content(content)
                     .userId(userId)
                     .nickName(nickName)
-                    .commonModel(findCommonModel.get())
+                    .commonModelId(findCommonModel.get().getId())
                     .build();
+
+            commonReplyRepsitory.save(commonReplyModel);
         }
+
 
         System.out.println("여기가지 도달하나?");
         return 1;

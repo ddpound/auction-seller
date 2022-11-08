@@ -44,6 +44,7 @@ public class SellerService {
         ResponseEntity<UserModelFront> findFrontUserModel = auctionUserInterFace
                 .findUserModelFront(jwtHeader,jwtRHeader, JWT.decode(token).getClaim("userId").asInt());
 
+
         if(findFrontUserModel.getBody() != null){
             ShoppingMallModel shoppingMallModel = shoppingMallModelRepositry.findByUsername(findFrontUserModel.getBody().getUserName());
 

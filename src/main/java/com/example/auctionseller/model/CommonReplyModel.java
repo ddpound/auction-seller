@@ -1,5 +1,6 @@
 package com.example.auctionseller.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,15 +29,8 @@ public class CommonReplyModel {
 
     private String nickName;
 
-    @ManyToOne
-    @JoinColumn(name = "commonModelId")
-    private CommonModel commonModel;
-
-    // 연관관계의 주인이 누구인지
-    @OneToMany(mappedBy = "commonReplyModel" , fetch = FetchType.EAGER)
-    @JsonIgnoreProperties({"commonReplyModel"})
-    @OrderBy("id desc")
-    private List<CommonReplyOfReplyModel> commonReplyOfReplyModels;
+    // Json Ignore도 작동하지 않으며 원인도 찾아내지못해 현재 이렇게 수정됨
+    private int commonModelId;
 
     @CreationTimestamp
     private Timestamp createDate;

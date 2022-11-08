@@ -43,13 +43,6 @@ public class CommonModel {
     @Column(length = 1000)
     private String pictureUrlPath;
 
-    // 연관관계의 주인이 누구인지
-    @OneToMany(mappedBy = "commonModel" , fetch = FetchType.EAGER)
-    @JsonIgnoreProperties({"commonModel"})
-    @OrderBy("id desc")
-    private List<CommonReplyModel> commonReplyModels;
-
-
     // 이미지파일이 저장된 고유 폴더 경로
     @Column(length = 500)
     private String filefolderPath;

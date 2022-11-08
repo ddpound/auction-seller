@@ -119,12 +119,14 @@ public class BoardController {
     }
 
     @PostMapping(value = "save-reply")
-    public ResponseEntity<String> saveReply(HttpServletRequest request,
-                                    @RequestParam(value="content", required=false)String content,
-                                    @RequestParam(value="userId", required=false)int userId,
-                                    @RequestParam(value="nickName", required=false)String nickName,
-                                    @RequestParam(value="boardId", required=false)int boardId){
-        System.out.println("여기가지 도달하나?22");
+    public ResponseEntity<String> saveReply(@RequestHeader("Authorization")String token,
+                                            @RequestHeader("RefreshToken") String reToken,
+                                            HttpServletRequest request,
+                                            @RequestParam(value="content", required=false)String content,
+                                            @RequestParam(value="userId", required=false)int userId,
+                                            @RequestParam(value="nickName", required=false)String nickName,
+                                            @RequestParam(value="boardId", required=false)int boardId){
+        System.out.println("seller가 여기까지도달하나?");
         int resultNum = boardService.saveReply(content,userId,nickName,boardId,request);
 
         if(resultNum ==1 ){

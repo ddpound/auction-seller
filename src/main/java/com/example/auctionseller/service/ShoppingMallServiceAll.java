@@ -1,9 +1,13 @@
 package com.example.auctionseller.service;
 
 import com.example.auctionseller.model.CommonModel;
+import com.example.auctionseller.model.CommonReplyModel;
 import com.example.auctionseller.model.ProductModel;
 import com.example.auctionseller.model.ShoppingMallModel;
+import com.example.auctionseller.model.frontdto.FrontCommonBoard;
+import com.example.auctionseller.model.frontdto.FrontShppingMallDto;
 import com.example.auctionseller.repository.CommonModelRepository;
+import com.example.auctionseller.repository.CommonReplyRepsitory;
 import com.example.auctionseller.repository.ProductModelRepository;
 import com.example.auctionseller.repository.ShoppingMallModelRepositry;
 import com.example.modulecommon.makefile.MakeFile;
@@ -28,6 +32,8 @@ public class ShoppingMallServiceAll {
     private final CommonModelRepository commonModelRepository;
 
     private final ProductModelRepository productModelRepository;
+
+    private final CommonReplyRepsitory commonReplyRepsitory;
 
     @Transactional(readOnly = true)
     public Optional<ShoppingMallModel> findShoppingMall(int shoppingMall){
@@ -59,18 +65,37 @@ public class ShoppingMallServiceAll {
 
         Optional<ShoppingMallModel>shoppingMallModel = shoppingMallModelRepositry.findById(shoppingMallId);
 
-        return commonModelRepository.findAllByShoppingMall(shoppingMallModel.get());
+        if(shoppingMallModel.isPresent()){
+            List<CommonModel> findModel =  commonModelRepository.findAllByShoppingMall(shoppingMallModel.get());
+            for (CommonModel s: findModel
+                 ) {
+                s.getShoppingMall().setUsername("");
+            }
+            return findModel;
+        }else{
+            return null;
+        }
+
     }
 
     /**
      * 판매자가 작성한 글을 가져와주는 함수
      * */
     @Transactional(readOnly = true)
-    public CommonModel findCommonModel(int boardId){
+    public FrontCommonBoard findCommonModel(int boardId){
         Optional<CommonModel> commonModel =  commonModelRepository.findById(boardId);
-        commonModel.ifPresent(model -> model.getShoppingMall().setUsername(""));
+
+        if(commonModel.isPresent()){
+
+            // 댓글 찾아줌
+            List<CommonReplyModel> commonReplyModels = commonReplyRepsitory.findAllByCommonModelId(commonModel.get().getId());
+
+            FrontShppingMallDto shppingMallDto = new FrontShppingMallDto(commonModel.get().getShoppingMall());
+
+            return new FrontCommonBoard(commonModel.get(), shppingMallDto,commonReplyModels);
+        }
 
         // 만약 결과값이 없다면 null을 반환
-        return commonModel.orElse(null);
+        return null;
     }
 }

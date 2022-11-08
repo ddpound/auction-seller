@@ -2,6 +2,7 @@ package com.example.auctionseller.controller;
 
 
 import com.example.auctionseller.model.ShoppingMallModel;
+import com.example.auctionseller.model.frontdto.FrontCommonBoard;
 import com.example.auctionseller.model.frontdto.FrontShppingMallDto;
 import com.example.auctionseller.service.ShoppingMallService;
 import com.example.auctionseller.service.ShoppingMallServiceAll;
@@ -68,7 +69,7 @@ public class AllAccessibleSellerController {
      * 판매자가 작성한 글을 가져오는 엔드포인트
      * */
     @GetMapping(value = "show-seller-board/{id}")
-    public ResponseEntity showSellerBoard(@PathVariable("id")int boardId){
+    public ResponseEntity<FrontCommonBoard> showSellerBoard(@PathVariable("id")int boardId){
 
         return new ResponseEntity(shoppingMallServiceAll.findCommonModel(boardId),HttpStatus.OK);
     }
