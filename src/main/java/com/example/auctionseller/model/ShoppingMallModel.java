@@ -28,6 +28,9 @@ public class ShoppingMallModel {
 
     private String shoppingMallExplanation;
 
+    @Column(unique = true, nullable = false)
+    private int userId;
+
     @Column(unique = true , nullable = false)
     @JsonIgnore
     private String username;

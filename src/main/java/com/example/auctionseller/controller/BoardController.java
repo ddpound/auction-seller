@@ -125,9 +125,32 @@ public class BoardController {
                                             @RequestParam(value="content", required=false)String content,
                                             @RequestParam(value="userId", required=false)int userId,
                                             @RequestParam(value="nickName", required=false)String nickName,
+                                            @RequestParam(value="userPicture", required=false)String userPicture,
                                             @RequestParam(value="boardId", required=false)int boardId){
-        System.out.println("seller가 여기까지도달하나?");
-        int resultNum = boardService.saveReply(content,userId,nickName,boardId,request);
+
+        int resultNum = boardService.saveReply(content,userId,nickName,userPicture,boardId,request);
+
+        if(resultNum ==1 ){
+            return new ResponseEntity<>("success save reply", HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>("fail save reply", HttpStatus.BAD_REQUEST);
+        }
+
+
+
+    }
+
+
+    @PostMapping(value = "save-reply/of-reply")
+    public ResponseEntity<String> saveReplyOfReply(HttpServletRequest request,
+                                                   @RequestParam(value="content", required=false)String content,
+                                                   @RequestParam(value="userId", required=false)int userId,
+                                                   @RequestParam(value="nickName", required=false)String nickName,
+                                                   @RequestParam(value="userPicture", required=false)String userPicture,
+                                                   @RequestParam(value="replyId", required=false)int replyId,
+                                                   @RequestParam(value="boardId", required=false)int boardId){
+        System.out.println("작동확인");
+        int resultNum = boardService.saveReplyOfReply(content,userId,nickName,userPicture,boardId,replyId,request);
 
         if(resultNum ==1 ){
             return new ResponseEntity<>("success save reply", HttpStatus.OK);

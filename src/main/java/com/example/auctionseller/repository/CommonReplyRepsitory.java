@@ -9,4 +9,6 @@ import java.util.List;
 public interface CommonReplyRepsitory extends JpaRepository<CommonReplyModel,Integer> {
 
     List<CommonReplyModel> findAllByCommonModelId(int commonModelId);
+
+    void deleteAllByCommonModelId(int id);
 }

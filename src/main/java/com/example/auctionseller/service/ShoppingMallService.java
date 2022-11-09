@@ -77,6 +77,7 @@ public class ShoppingMallService {
                         .thumbnailUrlPath(fileNames.get(1))
                         .thumbnailFilePath(fileNames.get(2))
                         .filefolderPath(fileNames.get(3))
+                        .userId(userId)
                         .username(username)
                         .build();
 

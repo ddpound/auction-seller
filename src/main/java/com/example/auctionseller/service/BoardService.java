@@ -1,9 +1,6 @@
 package com.example.auctionseller.service;
 
-import com.example.auctionseller.model.BoardCategory;
-import com.example.auctionseller.model.CommonModel;
-import com.example.auctionseller.model.CommonReplyModel;
-import com.example.auctionseller.model.ShoppingMallModel;
+import com.example.auctionseller.model.*;
 import com.example.auctionseller.repository.*;
 import com.example.auctionseller.sellercommon.SellerReturnTokenUsername;
 import com.example.auctionseller.userinterface.AuctionUserInterFace;
@@ -208,6 +205,10 @@ public class BoardService {
                 //마지막 단계에 삭제
 
                 // 사진을 담아놓는 폴더 경로를 통해 파일 삭제
+
+                // 보드와 관련된 댓글들을 모두 삭제
+                commonReplyRepsitory.deleteAllByCommonModelId(commonModel.get().getId());
+
                 commonModelRepository.delete(commonModel.get());
                 return 1;
 
@@ -297,6 +298,7 @@ public class BoardService {
     public int saveReply(String content,
                          int userId,
                          String nickName,
+                         String userPicture,
                          int commonModelId,
                          HttpServletRequest request){
         Map<Integer, Object> returnMapUserData = sellerReturnTokenUsername.tokenGetUsername(request);
@@ -309,6 +311,7 @@ public class BoardService {
                     .content(content)
                     .userId(userId)
                     .nickName(nickName)
+                    .userPicture(userPicture)
                     .commonModelId(findCommonModel.get().getId())
                     .build();
 
@@ -318,6 +321,70 @@ public class BoardService {
 
         System.out.println("여기가지 도달하나?");
         return 1;
+    }
+
+    @Transactional
+    public int modifyReply(String content,
+                         int userId,
+                         String nickName,
+                         String userPicture,
+                         int commonModelId,
+                         HttpServletRequest request){
+        Map<Integer, Object> returnMapUserData = sellerReturnTokenUsername.tokenGetUsername(request);
+
+        Optional<CommonModel> findCommonModel =  commonModelRepository.findById(commonModelId);
+
+        if(findCommonModel.isPresent()){
+            CommonReplyModel commonReplyModel
+                    = CommonReplyModel.builder()
+                    .content(content)
+                    .userId(userId)
+                    .nickName(nickName)
+                    .userPicture(userPicture)
+                    .commonModelId(findCommonModel.get().getId())
+                    .build();
+
+            commonReplyRepsitory.save(commonReplyModel);
+        }
+        log.info("success modify reply");
+        return 1;
+    }
+
+    @Transactional
+    public int saveReplyOfReply(String content,
+                           int userId,
+                           String nickName,
+                           String userPicture,
+                           int commonModelId,
+                           int replyId,
+                           HttpServletRequest request){
+        Map<Integer, Object> returnMapUserData = sellerReturnTokenUsername.tokenGetUsername(request);
+
+        // 게시판 찾기
+        Optional<CommonModel> findCommonModel =  commonModelRepository.findById(commonModelId);
+
+        // 대댓글을 달아줄 댓글을 검색
+        Optional<CommonReplyModel> findCommonReplyModel = commonReplyRepsitory.findById(replyId);
+
+        // 둘다 있어야함
+        if(findCommonModel.isPresent() && findCommonReplyModel.isPresent()){
+            CommonReplyOfReplyModel commonReplyOfReplyModel
+                    = CommonReplyOfReplyModel.builder()
+                    .content(content)
+                    .userId(userId)
+                    .nickName(nickName)
+                    .userPicture(userPicture)
+                    .commonModelId(findCommonModel.get().getId())
+                    .commonReplyModel(findCommonReplyModel.get())
+                    .build();
+
+            replyofReplyRepository.save(commonReplyOfReplyModel);
+            log.info("success save reply of reply");
+            return 1;
+        }
+
+        log.info("fail save reply of reply");
+        return -1;
     }
 
 }
