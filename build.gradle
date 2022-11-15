@@ -46,6 +46,8 @@ dependencies {
     implementation("com.auth0:java-jwt:3.16.0") //  oauth0, jwt 토큰 사용하기 위함
     implementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
 
+    // entity -> dto 변환을 위한 의존성 추가
+    implementation 'org.modelmapper:modelmapper:2.4.2'
 
     // json (오브젝트 클래스와 관련해서 필수)
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'

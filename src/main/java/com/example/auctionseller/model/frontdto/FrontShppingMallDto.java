@@ -1,9 +1,15 @@
 package com.example.auctionseller.model.frontdto;
 
 import com.example.auctionseller.model.ShoppingMallModel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class FrontShppingMallDto {
 
     private int id;

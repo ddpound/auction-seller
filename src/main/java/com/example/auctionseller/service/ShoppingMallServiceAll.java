@@ -1,18 +1,14 @@
 package com.example.auctionseller.service;
 
-import com.example.auctionseller.model.CommonModel;
-import com.example.auctionseller.model.CommonReplyModel;
-import com.example.auctionseller.model.ProductModel;
-import com.example.auctionseller.model.ShoppingMallModel;
+import com.example.auctionseller.model.*;
 import com.example.auctionseller.model.frontdto.FrontCommonBoard;
+import com.example.auctionseller.model.frontdto.FrontCommonReplyModel;
 import com.example.auctionseller.model.frontdto.FrontShppingMallDto;
-import com.example.auctionseller.repository.CommonModelRepository;
-import com.example.auctionseller.repository.CommonReplyRepsitory;
-import com.example.auctionseller.repository.ProductModelRepository;
-import com.example.auctionseller.repository.ShoppingMallModelRepositry;
+import com.example.auctionseller.repository.*;
 import com.example.modulecommon.makefile.MakeFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +30,8 @@ public class ShoppingMallServiceAll {
     private final ProductModelRepository productModelRepository;
 
     private final CommonReplyRepsitory commonReplyRepsitory;
+
+    private final ReplyofReplyRepository replyofReplyRepository;
 
     @Transactional(readOnly = true)
     public Optional<ShoppingMallModel> findShoppingMall(int shoppingMall){
@@ -90,12 +88,24 @@ public class ShoppingMallServiceAll {
             // 댓글 찾아줌
             List<CommonReplyModel> commonReplyModels = commonReplyRepsitory.findAllByCommonModelId(commonModel.get().getId());
 
-            FrontShppingMallDto shppingMallDto = new FrontShppingMallDto(commonModel.get().getShoppingMall());
+            //즉 댓글이 있다면
+            if(commonReplyModels.size() > 1){
+                // 대댓글도 찾아줌
+                List<CommonReplyOfReplyModel> commonReplyOfReplyModels = replyofReplyRepository.findAllByCommonReplyModel(commonReplyModels.get(1));
 
-            return new FrontCommonBoard(commonModel.get(), shppingMallDto,commonReplyModels);
+                List<FrontCommonReplyModel> frontCommonReplyModels;
+                // 댓글 DTO화
+                //FrontCommonReplyModel frontCommonReplyModel = new FrontCommonReplyModel(commonReplyModels,commonReplyOfReplyModels);
+            }
+
+
+            //FrontShppingMallDto shppingMallDto = new FrontShppingMallDto(commonModel.get().getShoppingMall());
+
+            //return new FrontCommonBoard(commonModel.get(), new FrontShppingMallDto(commonModel.get().getShoppingMall()),commonReplyModels);
         }
 
         // 만약 결과값이 없다면 null을 반환
+
         return null;
     }
 }

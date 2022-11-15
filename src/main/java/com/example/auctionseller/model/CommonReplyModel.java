@@ -1,9 +1,6 @@
 package com.example.auctionseller.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -17,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id") // 추가
 @Entity
 public class CommonReplyModel {
 
@@ -40,6 +36,7 @@ public class CommonReplyModel {
 
     @OneToMany(mappedBy = "commonReplyModel" , fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"commonReplyModel"})
+    @JsonManagedReference
     List<CommonReplyOfReplyModel> commonReplyOfReplyModels;
 
     @CreationTimestamp

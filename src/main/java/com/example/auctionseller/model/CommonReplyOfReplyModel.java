@@ -1,6 +1,8 @@
 package com.example.auctionseller.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,7 +16,6 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Getter
 @Setter
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
 @Entity
 public class CommonReplyOfReplyModel {
 
@@ -39,6 +40,7 @@ public class CommonReplyOfReplyModel {
      * 대댓글
      * */
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "commonId")
     private CommonReplyModel commonReplyModel;
 

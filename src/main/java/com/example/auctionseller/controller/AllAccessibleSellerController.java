@@ -1,6 +1,7 @@
 package com.example.auctionseller.controller;
 
 
+import com.example.auctionseller.model.CommonModel;
 import com.example.auctionseller.model.ShoppingMallModel;
 import com.example.auctionseller.model.frontdto.FrontCommonBoard;
 import com.example.auctionseller.model.frontdto.FrontShppingMallDto;
@@ -71,7 +72,7 @@ public class AllAccessibleSellerController {
     @GetMapping(value = "show-seller-board/{id}")
     public ResponseEntity<FrontCommonBoard> showSellerBoard(@PathVariable("id")int boardId){
 
-        return new ResponseEntity(shoppingMallServiceAll.findCommonModel(boardId),HttpStatus.OK);
+        return new ResponseEntity<FrontCommonBoard>(shoppingMallServiceAll.findCommonModel(boardId),HttpStatus.OK);
     }
 
 

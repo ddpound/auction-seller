@@ -25,14 +25,14 @@ public class FrontCommonBoard {
     private String pictureFilePath;
     private String pictureUrlPath;
     private String filefolderPath;
-    private List<CommonReplyModel> commonReplyModelList;
+    private List<FrontCommonReplyModel> frontCommonReplyModel;
     private BoardCategory boardCategory;
     private Timestamp createDate;
     private Timestamp modifyDate;
 
     public FrontCommonBoard(CommonModel commonModel,
                             FrontShppingMallDto shoppingMall,
-                            List<CommonReplyModel> commonReplyModelList) {
+                            List<FrontCommonReplyModel> frontCommonReplyModel) {
 
         this.id = commonModel.getId();
         this.title = commonModel.getTitle();
@@ -41,7 +41,7 @@ public class FrontCommonBoard {
         this.pictureFilePath = commonModel.getPictureFilePath();
         this.pictureUrlPath = commonModel.getPictureUrlPath();
         this.filefolderPath = commonModel.getFilefolderPath();
-        this.commonReplyModelList = commonReplyModelList;
+        this.frontCommonReplyModel = frontCommonReplyModel;
         this.boardCategory = commonModel.getBoardCategory();
         this.createDate = commonModel.getCreateDate();
         this.modifyDate = commonModel.getModifyDate();

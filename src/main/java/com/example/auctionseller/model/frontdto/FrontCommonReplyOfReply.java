@@ -1,6 +1,7 @@
 package com.example.auctionseller.model.frontdto;
 
 import com.example.auctionseller.model.CommonReplyModel;
+import com.example.auctionseller.model.CommonReplyOfReplyModel;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -23,13 +24,24 @@ public class FrontCommonReplyOfReply {
      * 보드 아이디
      * */
     private int commonModelId;
-
     /**
      * 대댓글
      * */
     private int commonReplyModelId;
 
+    private FrontCommonReplyModel commonReplyModel;
     private Timestamp createDate;
 
     private Timestamp modifyDate;
+
+    public FrontCommonReplyOfReply(CommonReplyOfReplyModel commonReplyOfReplyModel){
+        this.id = commonReplyOfReplyModel.getId();
+        this.content = commonReplyOfReplyModel.getContent();
+        this.nickName = commonReplyOfReplyModel.getNickName();
+        this.userPicture = commonReplyOfReplyModel.getUserPicture();
+        this.commonModelId = commonReplyOfReplyModel.getCommonModelId();
+        this.commonReplyModelId = commonReplyOfReplyModel.getCommonReplyModel().getCommonModelId();
+        this.createDate = commonReplyOfReplyModel.getCreateDate();
+        this.modifyDate = commonReplyOfReplyModel.getModifyDate();
+    }
 }
