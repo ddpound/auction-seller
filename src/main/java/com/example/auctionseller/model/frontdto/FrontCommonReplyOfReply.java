@@ -40,7 +40,7 @@ public class FrontCommonReplyOfReply {
         this.nickName = commonReplyOfReplyModel.getNickName();
         this.userPicture = commonReplyOfReplyModel.getUserPicture();
         this.commonModelId = commonReplyOfReplyModel.getCommonModelId();
-        this.commonReplyModelId = commonReplyOfReplyModel.getCommonReplyModel().getCommonModelId();
+        this.commonReplyModelId = commonReplyOfReplyModel.getCommonReplyId();
         this.createDate = commonReplyOfReplyModel.getCreateDate();
         this.modifyDate = commonReplyOfReplyModel.getModifyDate();
     }

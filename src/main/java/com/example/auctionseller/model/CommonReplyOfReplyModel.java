@@ -36,13 +36,9 @@ public class CommonReplyOfReplyModel {
      * */
     private int commonModelId;
 
-    /**
-     * 대댓글
-     * */
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "commonId")
-    private CommonReplyModel commonReplyModel;
+    // 댓글 아이디
+    private int commonReplyId;
+
 
     @CreationTimestamp
     private Timestamp createDate;

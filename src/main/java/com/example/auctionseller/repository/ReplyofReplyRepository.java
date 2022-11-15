@@ -9,5 +9,4 @@ import java.util.List;
 public interface ReplyofReplyRepository extends JpaRepository<CommonReplyOfReplyModel,Integer> {
 
 
-    List<CommonReplyOfReplyModel> findAllByCommonReplyModel(CommonReplyModel commonReplyModel);
 }

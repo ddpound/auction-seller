@@ -30,28 +30,19 @@ public class FrontCommonReplyModel {
 
     private int commonModelId;
 
-    private List<FrontCommonReplyOfReply> commonReplyOfReplyModels;
+    private List<CommonReplyOfReplyModel> commonReplyOfReplyModels;
     private Timestamp createDate;
 
     private Timestamp modifyDate;
 
 
-    public FrontCommonReplyModel(CommonReplyModel commonReplyModel,
-                                 List<CommonReplyOfReplyModel> commonReplyOfReplyModels){
+    public FrontCommonReplyModel(CommonReplyModel commonReplyModel){
         this.id = commonReplyModel.getId();
         this.content = commonReplyModel.getContent();
         this.nickName = commonReplyModel.getNickName();
         this.userPicture = commonReplyModel.getUserPicture();
-        if(commonReplyOfReplyModels != null){
-            for (CommonReplyOfReplyModel c : commonReplyOfReplyModels
-            ) {
-                this.commonReplyOfReplyModels.add(new FrontCommonReplyOfReply(c));
-            }
-        }
-
         this.createDate = commonReplyModel.getCreateDate();
         this.modifyDate = commonReplyModel.getModifyDate();
-
     }
 
 

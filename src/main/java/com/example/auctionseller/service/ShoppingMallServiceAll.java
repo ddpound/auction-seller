@@ -88,20 +88,10 @@ public class ShoppingMallServiceAll {
             // 댓글 찾아줌
             List<CommonReplyModel> commonReplyModels = commonReplyRepsitory.findAllByCommonModelId(commonModel.get().getId());
 
-            //즉 댓글이 있다면
-            if(commonReplyModels.size() > 1){
-                // 대댓글도 찾아줌
-                List<CommonReplyOfReplyModel> commonReplyOfReplyModels = replyofReplyRepository.findAllByCommonReplyModel(commonReplyModels.get(1));
-
-                List<FrontCommonReplyModel> frontCommonReplyModels;
-                // 댓글 DTO화
-                //FrontCommonReplyModel frontCommonReplyModel = new FrontCommonReplyModel(commonReplyModels,commonReplyOfReplyModels);
-            }
 
 
             //FrontShppingMallDto shppingMallDto = new FrontShppingMallDto(commonModel.get().getShoppingMall());
-
-            //return new FrontCommonBoard(commonModel.get(), new FrontShppingMallDto(commonModel.get().getShoppingMall()),commonReplyModels);
+            return new FrontCommonBoard(commonModel.get(), new FrontShppingMallDto(commonModel.get().getShoppingMall()),commonReplyModels);
         }
 
         // 만약 결과값이 없다면 null을 반환

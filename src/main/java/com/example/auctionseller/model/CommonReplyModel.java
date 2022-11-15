@@ -34,7 +34,13 @@ public class CommonReplyModel {
     // Json Ignore도 작동하지 않으며 원인도 찾아내지못해 현재 이렇게 수정됨
     private int commonModelId;
 
-    @OneToMany(mappedBy = "commonReplyModel" , fetch = FetchType.LAZY)
+    /**
+     * 무한참조 방지를 위해 그리고 편한
+     * select를 위해서 양방향이 아닌
+     * 단방향을 채택하기로했습니다.
+     *
+     * */
+    @OneToMany(mappedBy = "commonReplyId", fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"commonReplyModel"})
     @JsonManagedReference
     List<CommonReplyOfReplyModel> commonReplyOfReplyModels;

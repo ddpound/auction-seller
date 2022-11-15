@@ -375,7 +375,7 @@ public class BoardService {
                     .nickName(nickName)
                     .userPicture(userPicture)
                     .commonModelId(findCommonModel.get().getId())
-                    .commonReplyModel(findCommonReplyModel.get())
+                    .commonReplyId(findCommonReplyModel.get().getId())
                     .build();
 
             replyofReplyRepository.save(commonReplyOfReplyModel);
