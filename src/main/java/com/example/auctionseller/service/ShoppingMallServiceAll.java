@@ -2,13 +2,11 @@ package com.example.auctionseller.service;
 
 import com.example.auctionseller.model.*;
 import com.example.auctionseller.model.frontdto.FrontCommonBoard;
-import com.example.auctionseller.model.frontdto.FrontCommonReplyModel;
 import com.example.auctionseller.model.frontdto.FrontShppingMallDto;
 import com.example.auctionseller.repository.*;
 import com.example.modulecommon.makefile.MakeFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,8 +85,6 @@ public class ShoppingMallServiceAll {
 
             // 댓글 찾아줌
             List<CommonReplyModel> commonReplyModels = commonReplyRepsitory.findAllByCommonModelId(commonModel.get().getId());
-
-
 
             //FrontShppingMallDto shppingMallDto = new FrontShppingMallDto(commonModel.get().getShoppingMall());
             return new FrontCommonBoard(commonModel.get(), new FrontShppingMallDto(commonModel.get().getShoppingMall()),commonReplyModels);

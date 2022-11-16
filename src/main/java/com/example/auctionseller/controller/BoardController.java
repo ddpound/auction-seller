@@ -119,9 +119,7 @@ public class BoardController {
     }
 
     @PostMapping(value = "save-reply")
-    public ResponseEntity<String> saveReply(@RequestHeader("Authorization")String token,
-                                            @RequestHeader("RefreshToken") String reToken,
-                                            HttpServletRequest request,
+    public ResponseEntity<String> saveReply(HttpServletRequest request,
                                             @RequestParam(value="content", required=false)String content,
                                             @RequestParam(value="userId", required=false)int userId,
                                             @RequestParam(value="nickName", required=false)String nickName,
@@ -138,6 +136,19 @@ public class BoardController {
 
 
 
+    }
+
+    @DeleteMapping(value = "delete-reply/{id}")
+    public ResponseEntity<String> deleteReply(@PathVariable(value = "id") Integer id,
+                                              HttpServletRequest request){
+
+        int resultNum = boardService.deleteReply(id, request);
+
+        if(resultNum ==1 ){
+            return new ResponseEntity<>("success save reply", HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>("fail save reply", HttpStatus.BAD_REQUEST);
+        }
     }
 
 

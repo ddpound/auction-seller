@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Log4j2
@@ -42,6 +43,7 @@ public class BoardService {
     private final CommonReplyRepsitory commonReplyRepsitory;
 
     private final ReplyofReplyRepository replyofReplyRepository;
+
 
     // 카테고리를 만들었을때 이름이 똑같으면, 알아서 만들어지도록할지..아니면...음..
     /**
@@ -163,6 +165,13 @@ public class BoardService {
         return 1;
     }
 
+    /**
+     * 삭제 시 주의사항
+     * 1. 대댓글 삭제 댓글삭제
+     * 2. 게시판 삭제
+     * 3. 이미지 삭제
+     *
+     * */
     @Transactional
     public int deleteSellerBoard(int boardId, HttpServletRequest request){
 
@@ -202,9 +211,10 @@ public class BoardService {
                     makeFile.folderPathImageDelete(commonModel.get().getFilefolderPath());
                 }
 
-                //마지막 단계에 삭제
+                // 마지막 단계에 삭제
 
-                // 사진을 담아놓는 폴더 경로를 통해 파일 삭제
+                // 대댓글 삭제
+                replyofReplyRepository.deleteAllByCommonModelId(commonModel.get().getId());
 
                 // 보드와 관련된 댓글들을 모두 삭제
                 commonReplyRepsitory.deleteAllByCommonModelId(commonModel.get().getId());
@@ -348,6 +358,50 @@ public class BoardService {
         }
         log.info("success modify reply");
         return 1;
+    }
+
+    /**
+    * @param replyId 댓글 아이디 가져오기
+    * 1. 꼭 삭제시 아이디 비교, 어드민인지를 비교 한후 삭제하도록
+    *
+    * */
+    @Transactional
+    public int deleteReply(int replyId, HttpServletRequest request){
+
+        String jwtHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String jwtRHeader = request.getHeader("RefreshToken");
+
+        Map<Integer, Object> returnMapUserData = sellerReturnTokenUsername.tokenGetUsername(request);
+
+        Optional<CommonReplyModel> findReplyModel = commonReplyRepsitory.findById(replyId);
+
+
+        // 관리자인지 유저인지를 파악하기위해
+        ResponseEntity<UserModelFront> responseFindUserModelFront = auctionUserInterFace.findUserModelFront(jwtHeader,jwtRHeader,(Integer)returnMapUserData.get(2));
+
+
+        if(Objects.requireNonNull(responseFindUserModelFront.getBody()).getUserName() == null){
+            return -3; // 유저가 없습니다.
+        }
+
+
+        //댓글이 있다면
+        if(findReplyModel.isPresent()){
+
+            // 작성자인지를 비교, 혹은 관리자라면
+            if((Integer)returnMapUserData.get(2) == findReplyModel.get().getUserId() ||
+                    responseFindUserModelFront.getBody().getRole().equals("ADMIN")){
+                // 먼저 해당 대댓글 모두 삭제
+                replyofReplyRepository.deleteAllByCommonReplyId(findReplyModel.get().getId());
+
+                // 댓글 삭제 진행
+                commonReplyRepsitory.delete(findReplyModel.get());
+                return 1;
+            }
+
+        }
+
+        return -1;
     }
 
     @Transactional
