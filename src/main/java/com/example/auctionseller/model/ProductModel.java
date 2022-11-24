@@ -17,6 +17,8 @@ import java.util.List;
 @Setter
 @Entity
 public class ProductModel {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;

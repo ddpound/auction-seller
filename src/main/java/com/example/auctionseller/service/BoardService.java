@@ -441,4 +441,41 @@ public class BoardService {
         return -1;
     }
 
+    @Transactional
+    public int deleteReplyOfReply(int replyOfReplyId, HttpServletRequest request){
+
+        String jwtHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String jwtRHeader = request.getHeader("RefreshToken");
+
+        Map<Integer, Object> returnMapUserData = sellerReturnTokenUsername.tokenGetUsername(request);
+
+        Optional<CommonReplyOfReplyModel> findReplyofReplyModel = replyofReplyRepository.findById(replyOfReplyId);
+
+
+        // 관리자인지 유저인지를 파악하기위해
+        ResponseEntity<UserModelFront> responseFindUserModelFront = auctionUserInterFace.findUserModelFront(jwtHeader,jwtRHeader,(Integer)returnMapUserData.get(2));
+
+
+        if(Objects.requireNonNull(responseFindUserModelFront.getBody()).getUserName() == null){
+            return -3; // 유저가 없습니다.
+        }
+
+
+        //대댓글이 있다면
+        if(findReplyofReplyModel.isPresent()){
+
+            // 작성자인지를 비교, 혹은 관리자라면
+            if((Integer)returnMapUserData.get(2) == findReplyofReplyModel.get().getUserId() ||
+                    responseFindUserModelFront.getBody().getRole().equals("ADMIN")){
+
+                // 대댓글 삭제 진행
+                replyofReplyRepository.delete(findReplyofReplyModel.get());
+                return 1;
+            }
+
+        }
+
+        return -1;
+    }
+
 }

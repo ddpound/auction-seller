@@ -173,4 +173,17 @@ public class BoardController {
 
     }
 
+    @DeleteMapping(value = "delete-reply/of-reply/{id}")
+    public ResponseEntity<String> deleteReplyOfReply(@PathVariable(value = "id") Integer id,
+                                              HttpServletRequest request){
+
+        int resultNum = boardService.deleteReplyOfReply(id, request);
+
+        if(resultNum ==1 ){
+            return new ResponseEntity<>("success save reply", HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>("fail save reply", HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
