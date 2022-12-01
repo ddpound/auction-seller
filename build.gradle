@@ -62,6 +62,9 @@ dependencies {
     // Feign Client 등록, Rest Template를 좀 더 쓰기 쉽게 사용
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
+    // json parse를 위한 의존성추가
+    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
 
     compileOnly project(':module-common')
 }

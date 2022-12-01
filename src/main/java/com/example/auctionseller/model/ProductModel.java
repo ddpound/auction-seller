@@ -1,5 +1,7 @@
 package com.example.auctionseller.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -52,6 +54,11 @@ public class ProductModel {
     // 이미지파일이 저장된 고유 폴더 경로
     @Column(length = 500)
     private String filefolderPath;
+
+    @OneToMany(mappedBy = "productId" ,fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"productId"})
+    @JsonManagedReference
+    List<ProductOption> productOptionList;
 
 
     @CreationTimestamp

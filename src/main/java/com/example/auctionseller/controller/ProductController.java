@@ -1,11 +1,19 @@
 package com.example.auctionseller.controller;
 
+import com.example.auctionseller.model.ProductOption;
 import com.example.auctionseller.sellercommon.SellerReturnTokenUsername;
 import com.example.auctionseller.service.ProductService;
 import com.example.auctionseller.service.ShoppingMallService;
 import com.example.modulecommon.makefile.MakeFile;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -23,6 +32,7 @@ public class ProductController {
 
     private final ShoppingMallService shoppingMallService;
 
+    private final ObjectMapper objectMapper;
 
     private final ProductService productService;
 
@@ -40,8 +50,26 @@ public class ProductController {
                                       @RequestParam(value="thumbnail1", required=false) MultipartFile file1,
                                       @RequestParam(value="thumbnail2", required=false) MultipartFile file2,
                                       @RequestParam(value="thumbnail3", required=false) MultipartFile file3,
+                                      @RequestParam(value = "optionList" , required = false) String optionList,
                                       @PathVariable(value = "modify" , required = false) boolean modify,
-                                      HttpServletRequest request) {
+                                      HttpServletRequest request) throws ParseException {
+
+        System.out.println(optionList);
+        //String change = optionList.substring(optionList.length()-1).substring(1);
+
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject;
+        JSONArray jsonArrayOptionList;
+
+        jsonArrayOptionList = (JSONArray) parser.parse(optionList);
+
+        for (int i=0; i < jsonArrayOptionList.size();i++){
+            jsonObject = (JSONObject) jsonArrayOptionList.get(i);
+
+            System.out.println(jsonObject.get("optionTitle"));
+            System.out.println(jsonObject.get("detailedDescription"));
+        }
+
 
 
 
@@ -56,7 +84,12 @@ public class ProductController {
             fileList.add(file3);
 
         int resultNum = productService.saveProduct(ProductID,
-                productname,productprice,productquantity,content,fileList,request,modify);
+                productname,
+                productprice,
+                productquantity,
+                content,
+                jsonArrayOptionList,
+                fileList,request,modify);
 
         if(resultNum == 1 ){
             return new ResponseEntity<>("OK", HttpStatus.OK);

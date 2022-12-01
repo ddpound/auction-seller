@@ -3,8 +3,10 @@ package com.example.auctionseller.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.auctionseller.model.ProductModel;
+import com.example.auctionseller.model.ProductOption;
 import com.example.auctionseller.model.ShoppingMallModel;
 import com.example.auctionseller.repository.ProductModelRepository;
+import com.example.auctionseller.repository.ProductOptionRepositry;
 import com.example.auctionseller.repository.ShoppingMallModelRepositry;
 import com.example.auctionseller.sellercommon.SellerReturnTokenUsername;
 import com.example.auctionseller.userinterface.AuctionUserInterFace;
@@ -14,6 +16,8 @@ import com.example.modulecommon.jwtutil.JWTUtil;
 import com.example.modulecommon.makefile.MakeFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,10 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -43,12 +44,15 @@ public class ProductService {
 
     private final AuctionUserInterFace auctionUserInterFace;
 
+    private final ProductOptionRepositry productOptionRepositry;
+
     @Transactional
     public int saveProduct(Integer ProductID,
                            String productName,
                            int productPrice,
                            int productquantity,
                            String content,
+                           JSONArray optionList,
                            List<MultipartFile> fileList,
                            HttpServletRequest request,
                            boolean modify) {
@@ -112,6 +116,8 @@ public class ProductService {
             // 동시에 영속화
             Optional<ProductModel> productModel = productModelRepository.findById(ProductID);
 
+            List<ProductOption> findProductOption = productOptionRepositry.findAllByProductId(ProductID);
+
             makeFileResult = makeFile.saveMoveImageFiles((Integer) returnmap.get(2), content, AuthNames.Seller,productModel.get().getFilefolderPath());
 
             if (makeFileResult.get(1) == "-3") {
@@ -144,8 +150,28 @@ public class ProductService {
             productModel.get().setProductPrice(productPrice);
             productModel.get().setContent(changecontent);
 
-            // 수정 진행하고 끝내버리자
-            // 문제 없다면 반환 1, 여기까지왔다면 임시파일 삭제
+            List<ProductOption> productOptions = new ArrayList<>();
+
+            // 수정할 옵션이 있을 경우
+            if(optionList.size() >0){
+
+                // 기존에 있던 모든 애들 전부 삭제후 추가해주기
+                productOptionRepositry.deleteAll(findProductOption);
+
+                JSONObject jsonObject;
+                for (int i=0; i < optionList.size();i++){
+                    jsonObject = (JSONObject) optionList.get(i);
+
+                    ProductOption productOption = ProductOption
+                            .builder()
+                            .productId(productModel.get().getId())
+                            .optionTitle(jsonObject.get("optionTitle").toString())
+                            .detailedDescription(jsonObject.get("detailedDescription").toString())
+                            .build();
+                    productOptionRepositry.save(productOption);
+                }
+
+            }
 
 
             //수정 진행후 사용하지 않는 이미지 삭제
@@ -171,6 +197,9 @@ public class ProductService {
         makeFile.deleteTemporary((Integer) returnmap.get(2));
 
 
+
+
+
         ProductModel productModel = ProductModel.builder()
                 .productName(productName)
                 .productPrice(productPrice)
@@ -183,7 +212,29 @@ public class ProductService {
                 .build();
 
         try {
-            productModelRepository.save(productModel);
+            int saveProductId = productModelRepository.save(productModel).getId();
+
+
+            // 저장할 옵션이 있을 경우
+            if(optionList.size() >0){
+
+                JSONObject jsonObject;
+
+                for (int i=0; i < optionList.size();i++){
+                    jsonObject = (JSONObject) optionList.get(i);
+
+                    ProductOption productOption = ProductOption
+                            .builder()
+                            .productId(saveProductId)
+                            .optionTitle(jsonObject.get("optionTitle").toString())
+                            .detailedDescription(jsonObject.get("detailedDescription").toString())
+                            .build();
+                    productOptionRepositry.save(productOption);
+                }
+
+            }
+
+
 
         } catch (Exception e) {
             log.info(e);
