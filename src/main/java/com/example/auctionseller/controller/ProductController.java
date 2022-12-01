@@ -54,23 +54,10 @@ public class ProductController {
                                       @PathVariable(value = "modify" , required = false) boolean modify,
                                       HttpServletRequest request) throws ParseException {
 
-        System.out.println(optionList);
-        //String change = optionList.substring(optionList.length()-1).substring(1);
-
         JSONParser parser = new JSONParser();
-        JSONObject jsonObject;
         JSONArray jsonArrayOptionList;
 
         jsonArrayOptionList = (JSONArray) parser.parse(optionList);
-
-        for (int i=0; i < jsonArrayOptionList.size();i++){
-            jsonObject = (JSONObject) jsonArrayOptionList.get(i);
-
-            System.out.println(jsonObject.get("optionTitle"));
-            System.out.println(jsonObject.get("detailedDescription"));
-        }
-
-
 
 
         List<MultipartFile> fileList = new ArrayList<MultipartFile>();
