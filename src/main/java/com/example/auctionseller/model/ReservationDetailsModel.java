@@ -4,10 +4,7 @@ package com.example.auctionseller.model;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 
@@ -27,11 +24,15 @@ public class ReservationDetailsModel {
     private int id;
 
     // 제품 아이디
-    private int productId;
+    @ManyToOne
+    private ProductModel productId;
 
-    // 유저 아이디
-    private int userId;
+    private int quantity;
 
+    private int sellerId;
+
+    // 구매자 아이디
+    private int buyerId;
 
     @CreationTimestamp
     private Timestamp createDate;
