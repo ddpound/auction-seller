@@ -29,5 +29,7 @@ public class ProductOption {
 
     private int productId;
 
+    private int reservationId;
+
 
 }
