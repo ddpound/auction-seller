@@ -41,6 +41,8 @@ public class ReservationDetailsModel {
     // 구매자 아이디
     private int buyerId;
 
+    private String buyerNickName;
+
     private int shoppingMallId;
 
     @OneToMany(mappedBy = "reservationId" ,fetch = FetchType.LAZY)

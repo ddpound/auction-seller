@@ -25,6 +25,8 @@ public class ReservationDetails {
     // 구매자 아이디
     private int buyerId;
 
+    private String buyerNickName;
+
     private List<OptionDto> optionList;
 
 

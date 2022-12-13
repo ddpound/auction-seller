@@ -49,6 +49,7 @@ public class ReservationService {
                             .buyerId(reservationDetails.getBuyerId())
                             .quantity(reservationDetails.getQuantity())
                             .shoppingMallId(reservationDetails.getShoppingMallId())
+                            .buyerNickName(reservationDetails.getBuyerNickName())
                             .productId(productModel.get())
                             .productId(productModel.get()).build();
 

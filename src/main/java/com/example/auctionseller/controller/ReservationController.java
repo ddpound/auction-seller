@@ -21,7 +21,6 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-
     /**
      * 쇼핑몰 id ->  userId ->
      * */
