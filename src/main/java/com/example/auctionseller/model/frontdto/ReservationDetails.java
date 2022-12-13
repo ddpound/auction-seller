@@ -20,7 +20,7 @@ public class ReservationDetails {
 
     private int quantity;
 
-    private int shppingMallId;
+    private int shoppingMallId;
 
     // 구매자 아이디
     private int buyerId;

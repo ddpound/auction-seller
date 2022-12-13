@@ -8,10 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -23,13 +22,23 @@ public class ReservationController {
     private final ReservationService reservationService;
 
 
+    /**
+     * 쇼핑몰 id ->  userId ->
+     * */
+    @GetMapping("find-all-reservation/{shoppingMallId}")
+    public ResponseEntity<List> findAllReservation(@PathVariable(value = "shoppingMallId")int shoppingMallId){
+        return new ResponseEntity<>(reservationService.findAllReservationByShoppingMallId(shoppingMallId),HttpStatus.OK);
+    }
+
+    @GetMapping("find-reservation/{reservationId}")
+    public ResponseEntity<String> findReservation(@PathVariable(value = "reservationId")int reservationID){
+
+        return new ResponseEntity<>("",HttpStatus.OK);
+    }
+
+
     @PostMapping(value = "save-reservation")
     public ResponseEntity<String> saveReservationDetails(@RequestBody ReservationDetails reservationDetails){
-
-        System.out.println("작동테스트");
-        System.out.println(reservationDetails);
-        System.out.println(reservationDetails.getBuyerId());
-        System.out.println(reservationDetails.getOptionList());
 
         int resultNum = reservationService.saveReservation(reservationDetails);
 
@@ -39,4 +48,6 @@ public class ReservationController {
 
         return new ResponseEntity<String>("fail save", HttpStatus.BAD_REQUEST);
     }
+
+
 }

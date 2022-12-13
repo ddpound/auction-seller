@@ -41,10 +41,10 @@ public class ReservationDetailsModel {
     // 구매자 아이디
     private int buyerId;
 
+    private int shoppingMallId;
+
     @OneToMany(mappedBy = "reservationId" ,fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"reservationId"})
-    @JsonManagedReference
-    private List<ProductOption> options;
+    private List<ReservationOption> options;
 
     @CreationTimestamp
     private Timestamp createDate;

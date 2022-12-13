@@ -7,16 +7,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-/**
- * 제품 옵션을 붙이는 곳
- * */
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
-public class ProductOption {
+public class ReservationOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,5 +25,7 @@ public class ProductOption {
     private String detailedDescription;
 
     private int productId;
+
+    private int reservationId;
 
 }
