@@ -4,6 +4,7 @@ import com.example.auctionseller.model.ProductModel;
 import com.example.auctionseller.model.ProductOption;
 import com.example.auctionseller.model.ReservationDetailsModel;
 import com.example.auctionseller.model.ReservationOption;
+import com.example.auctionseller.model.enums.ReservationStatus;
 import com.example.auctionseller.model.frontdto.OptionDto;
 import com.example.auctionseller.model.frontdto.ReservationDetails;
 import com.example.auctionseller.repository.ProductOptionRepositry;
@@ -51,7 +52,9 @@ public class ReservationService {
                             .shoppingMallId(reservationDetails.getShoppingMallId())
                             .buyerNickName(reservationDetails.getBuyerNickName())
                             .productId(productModel.get())
-                            .productId(productModel.get()).build();
+                            .productId(productModel.get())
+                            .reservationStatus(ReservationStatus.None)
+                            .build();
 
             int reservationID = reservationRepository.save(reservationDetailsModel).getId();
 

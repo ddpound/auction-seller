@@ -1,6 +1,7 @@
 package com.example.auctionseller.model;
 
 
+import com.example.auctionseller.model.enums.ReservationStatus;
 import com.example.auctionseller.model.frontdto.OptionDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -44,6 +45,8 @@ public class ReservationDetailsModel {
     private String buyerNickName;
 
     private int shoppingMallId;
+    
+    private ReservationStatus reservationStatus;
 
     @OneToMany(mappedBy = "reservationId" ,fetch = FetchType.LAZY)
     private List<ReservationOption> options;
