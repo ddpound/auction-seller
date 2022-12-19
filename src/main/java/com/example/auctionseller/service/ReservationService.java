@@ -53,7 +53,7 @@ public class ReservationService {
                             .buyerNickName(reservationDetails.getBuyerNickName())
                             .productId(productModel.get())
                             .productId(productModel.get())
-                            .reservationStatus(ReservationStatus.None)
+                            .reservationStatus(ReservationStatus.없음)
                             .build();
 
             int reservationID = reservationRepository.save(reservationDetailsModel).getId();
