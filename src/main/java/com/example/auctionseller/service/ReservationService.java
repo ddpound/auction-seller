@@ -82,5 +82,19 @@ public class ReservationService {
         return 1;
     }
 
+    @Transactional
+    public int changeStatusReservation(ReservationDetailsModel reservationDetailsModel,
+                                       int status){
+
+        Optional<ReservationDetailsModel> findReservationDetailsModel =
+                reservationRepository.findById(reservationDetailsModel.getId());
+
+        if(findReservationDetailsModel.isPresent()){
+
+            return 1;
+        }else {
+            return -1;
+        }
+    }
 
 }
