@@ -55,12 +55,21 @@ public class ReservationController {
         System.out.println(reservationDetailsModel.getBuyerId());
         System.out.println(reservationDetailsModel.getBuyerNickName());
         System.out.println(reservationDetailsModel.getShoppingMallId());
+        System.out.println(reservationDetailsModel.getId());
         System.out.println(reservationDetailsModel);
         System.out.println(status);
 
+        int resultNum = reservationService.changeStatusReservation(reservationDetailsModel,status);
 
+        if(resultNum ==1 ){
+            return new ResponseEntity<String>("save success", HttpStatus.OK);
+        }else if(resultNum == -1){
+            return new ResponseEntity<String>("Sorry fail change not found reservationDetailModel", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        else{
+            return new ResponseEntity<String>("Sorry fail change reservation status", HttpStatus.BAD_REQUEST);
+        }
 
-        return new ResponseEntity<String>("save success", HttpStatus.OK);
     }
 
 

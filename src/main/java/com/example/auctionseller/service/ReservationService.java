@@ -90,7 +90,7 @@ public class ReservationService {
                 reservationRepository.findById(reservationDetailsModel.getId());
 
         if(findReservationDetailsModel.isPresent()){
-
+            findReservationDetailsModel.get().setReservationStatus(ReservationStatus.values()[status]);
             return 1;
         }else {
             return -1;
