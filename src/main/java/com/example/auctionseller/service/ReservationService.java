@@ -78,8 +78,17 @@ public class ReservationService {
         return 1;
     }
 
-    public int deleteReservation(){
-        return 1;
+    public int deleteReservation(ReservationDetailsModel reservationDetailsModel){
+
+        Optional<ReservationDetailsModel> findReservationDetailsModel =
+                reservationRepository.findById(reservationDetailsModel.getId());
+
+        if(findReservationDetailsModel.isPresent()){
+            reservationRepository.delete(reservationDetailsModel);
+            return 1;
+        }else {
+            return -1;
+        }
     }
 
     @Transactional
