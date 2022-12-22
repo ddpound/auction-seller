@@ -78,6 +78,7 @@ public class ReservationService {
         return 1;
     }
 
+    @Transactional
     public int deleteReservation(ReservationDetailsModel reservationDetailsModel){
 
         Optional<ReservationDetailsModel> findReservationDetailsModel =

@@ -72,5 +72,12 @@ public class ReservationController {
 
     }
 
+    // 원하는 검색어와 필터를 가져오기
+    @GetMapping(value = "search")
+    public ResponseEntity<List> searchReservation(int shoppingMallId){
+
+        return new ResponseEntity<>(reservationService.findAllReservationByShoppingMallId(shoppingMallId), HttpStatus.OK);
+    }
+
 
 }
