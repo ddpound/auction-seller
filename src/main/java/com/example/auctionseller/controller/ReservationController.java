@@ -73,8 +73,18 @@ public class ReservationController {
     }
 
     // 원하는 검색어와 필터를 가져오기
-    @GetMapping(value = "search")
-    public ResponseEntity<List> searchReservation(int shoppingMallId){
+    /**
+     * 1 은 판매제품
+     * 2 는 구매자 검색
+     * */
+    @GetMapping(value = "search/{filter}/{word}")
+    public ResponseEntity<List> searchReservation(int shoppingMallId,
+                                                  @PathVariable int filter,
+                                                  @PathVariable String word){
+
+        if(filter ==2 ){
+            return new ResponseEntity<>(reservationService.findSearchNickName(word), HttpStatus.OK);
+        }
 
         return new ResponseEntity<>(reservationService.findAllReservationByShoppingMallId(shoppingMallId), HttpStatus.OK);
     }

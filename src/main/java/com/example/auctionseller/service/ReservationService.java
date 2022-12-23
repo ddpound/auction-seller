@@ -107,4 +107,9 @@ public class ReservationService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<ReservationDetailsModel> findSearchNickName(String nickName){
+        return reservationRepository.findAllByBuyerNickNameLike("%"+nickName+"%");
+    }
+
 }

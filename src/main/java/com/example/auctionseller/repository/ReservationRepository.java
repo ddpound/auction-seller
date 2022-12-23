@@ -8,4 +8,10 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<ReservationDetailsModel, Integer> {
 
     List<ReservationDetailsModel> findAllByShoppingMallId(int ShoppingMallId);
+
+
+    List<ReservationDetailsModel> findAllByBuyerNickNameLike(String NickName);
+
+    
+
 }
