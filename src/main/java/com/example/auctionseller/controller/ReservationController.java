@@ -83,7 +83,7 @@ public class ReservationController {
                                                   @PathVariable String word){
 
         if(filter ==2 ){
-            return new ResponseEntity<>(reservationService.findSearchNickName(word), HttpStatus.OK);
+            return new ResponseEntity<>(reservationService.findSearchNickName(shoppingMallId,word), HttpStatus.OK);
         }
 
         return new ResponseEntity<>(reservationService.findAllReservationByShoppingMallId(shoppingMallId), HttpStatus.OK);

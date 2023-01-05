@@ -10,7 +10,7 @@ public interface ReservationRepository extends JpaRepository<ReservationDetailsM
     List<ReservationDetailsModel> findAllByShoppingMallId(int ShoppingMallId);
 
 
-    List<ReservationDetailsModel> findAllByBuyerNickNameLike(String NickName);
+    List<ReservationDetailsModel> findAllByShoppingMallIdAndBuyerNickNameLike(int ShoppingMallId, String NickName);
 
     
 
