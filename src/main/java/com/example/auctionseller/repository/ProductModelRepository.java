@@ -12,4 +12,6 @@ public interface ProductModelRepository extends JpaRepository<ProductModel,Integ
 
     List<ProductModel> findAllByShoppingMall(Optional<ShoppingMallModel> shoppingMallModel);
     List<ProductModel> findAllByShoppingMall(ShoppingMallModel shoppingMallModel);
+
+    List<ProductModel> findAllByShoppingMallAndProductNameLike(ShoppingMallModel shoppingMallModel, String ProductName);
 }

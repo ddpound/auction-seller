@@ -84,7 +84,7 @@ public class ReservationController {
                                                   @RequestParam int shoppingMallId){
 
         if(filter ==1 ){
-            return new ResponseEntity<>(reservationService.findSearchNickName(shoppingMallId,word), HttpStatus.OK);
+            return new ResponseEntity<>(reservationService.findSearchProductName(shoppingMallId,word), HttpStatus.OK);
         }
 
         if(filter ==2 ){

@@ -1,16 +1,10 @@
 package com.example.auctionseller.service;
 
-import com.example.auctionseller.model.ProductModel;
-import com.example.auctionseller.model.ProductOption;
-import com.example.auctionseller.model.ReservationDetailsModel;
-import com.example.auctionseller.model.ReservationOption;
+import com.example.auctionseller.model.*;
 import com.example.auctionseller.model.enums.ReservationStatus;
 import com.example.auctionseller.model.frontdto.OptionDto;
 import com.example.auctionseller.model.frontdto.ReservationDetails;
-import com.example.auctionseller.model.frontdto.SearchingDto;
-import com.example.auctionseller.repository.ProductOptionRepositry;
-import com.example.auctionseller.repository.ReservationOptionRepository;
-import com.example.auctionseller.repository.ReservationRepository;
+import com.example.auctionseller.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -28,6 +22,10 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
 
     private final ReservationOptionRepository reservationOptionRepository;
+
+    private final ProductModelRepository productModelRepository;
+
+    private final ShoppingMallModelRepositry shoppingMallModelRepositry;
 
     private final ProductService productService;
 
@@ -115,7 +113,10 @@ public class ReservationService {
 
     @Transactional(readOnly = true)
     public List<ReservationDetailsModel> findSearchProductName(int shoppingMallId,String word){
-        return reservationRepository.findAllByShoppingMallIdAndProductId(shoppingMallId,1);
+
+        Optional<ShoppingMallModel> findShoppingMallModel =  shoppingMallModelRepositry.findById(shoppingMallId);
+
+        return reservationRepository.findAllByShoppingMallIdAndProductId_ProductNameLike(shoppingMallId, "%"+word+"%");
     }
 
 
