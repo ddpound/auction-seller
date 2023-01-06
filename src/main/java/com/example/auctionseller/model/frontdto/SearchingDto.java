@@ -10,6 +10,7 @@ import lombok.*;
 @Getter
 @Setter
 public class SearchingDto {
+    private int shoppingMallId;
     private String word;
     private int filter;
 }

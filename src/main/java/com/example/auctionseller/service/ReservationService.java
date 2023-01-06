@@ -7,6 +7,7 @@ import com.example.auctionseller.model.ReservationOption;
 import com.example.auctionseller.model.enums.ReservationStatus;
 import com.example.auctionseller.model.frontdto.OptionDto;
 import com.example.auctionseller.model.frontdto.ReservationDetails;
+import com.example.auctionseller.model.frontdto.SearchingDto;
 import com.example.auctionseller.repository.ProductOptionRepositry;
 import com.example.auctionseller.repository.ReservationOptionRepository;
 import com.example.auctionseller.repository.ReservationRepository;
@@ -108,8 +109,14 @@ public class ReservationService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReservationDetailsModel> findSearchNickName(int shoppingMallId,String nickName){
-        return reservationRepository.findAllByShoppingMallIdAndBuyerNickNameLike(shoppingMallId,"%"+nickName+"%");
+    public List<ReservationDetailsModel> findSearchNickName(int shoppingMallId,String word){
+        return reservationRepository.findAllByShoppingMallIdAndBuyerNickNameLike(shoppingMallId,"%"+word+"%");
     }
+
+    @Transactional(readOnly = true)
+    public List<ReservationDetailsModel> findSearchProductName(int shoppingMallId,String word){
+        return reservationRepository.findAllByShoppingMallIdAndProductId(shoppingMallId,1);
+    }
+
 
 }

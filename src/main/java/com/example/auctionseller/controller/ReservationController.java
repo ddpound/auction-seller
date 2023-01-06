@@ -3,6 +3,7 @@ package com.example.auctionseller.controller;
 
 import com.example.auctionseller.model.ReservationDetailsModel;
 import com.example.auctionseller.model.frontdto.ReservationDetails;
+import com.example.auctionseller.model.frontdto.SearchingDto;
 import com.example.auctionseller.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -77,10 +78,14 @@ public class ReservationController {
      * 1 은 판매제품
      * 2 는 구매자 검색
      * */
-    @GetMapping(value = "search/{filter}/{word}")
-    public ResponseEntity<List> searchReservation(int shoppingMallId,
-                                                  @PathVariable int filter,
-                                                  @PathVariable String word){
+    @GetMapping(value = "search")
+    public ResponseEntity<List> searchReservation(@RequestParam int filter,
+                                                  @RequestParam String word,
+                                                  @RequestParam int shoppingMallId){
+
+        if(filter ==1 ){
+            return new ResponseEntity<>(reservationService.findSearchNickName(shoppingMallId,word), HttpStatus.OK);
+        }
 
         if(filter ==2 ){
             return new ResponseEntity<>(reservationService.findSearchNickName(shoppingMallId,word), HttpStatus.OK);
