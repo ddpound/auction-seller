@@ -83,14 +83,15 @@ public class ReservationController {
                                                   @RequestParam String word,
                                                   @RequestParam int shoppingMallId){
 
-        if(filter ==1 ){
+        if(filter ==1 && word.length() > 0 ){
             return new ResponseEntity<>(reservationService.findSearchProductName(shoppingMallId,word), HttpStatus.OK);
         }
 
-        if(filter ==2 ){
+        if(filter ==2 && word.length() > 0 ){
             return new ResponseEntity<>(reservationService.findSearchNickName(shoppingMallId,word), HttpStatus.OK);
         }
 
+        // 필터 없거나 word가 없으면 그냥 전체를 보내주기
         return new ResponseEntity<>(reservationService.findAllReservationByShoppingMallId(shoppingMallId), HttpStatus.OK);
     }
 

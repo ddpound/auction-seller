@@ -50,6 +50,7 @@ public class ReservationService {
                             .quantity(reservationDetails.getQuantity())
                             .shoppingMallId(reservationDetails.getShoppingMallId())
                             .buyerNickName(reservationDetails.getBuyerNickName())
+                            .address(reservationDetails.getAddress())
                             .productId(productModel.get())
                             .productId(productModel.get())
                             .reservationStatus(ReservationStatus.없음)
@@ -113,9 +114,6 @@ public class ReservationService {
 
     @Transactional(readOnly = true)
     public List<ReservationDetailsModel> findSearchProductName(int shoppingMallId,String word){
-
-        Optional<ShoppingMallModel> findShoppingMallModel =  shoppingMallModelRepositry.findById(shoppingMallId);
-
         return reservationRepository.findAllByShoppingMallIdAndProductId_ProductNameLike(shoppingMallId, "%"+word+"%");
     }
 

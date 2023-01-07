@@ -45,6 +45,8 @@ public class ReservationDetailsModel {
     private String buyerNickName;
 
     private int shoppingMallId;
+
+    private String address;
     
     private ReservationStatus reservationStatus;
 
