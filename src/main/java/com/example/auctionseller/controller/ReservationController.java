@@ -77,6 +77,8 @@ public class ReservationController {
     /**
      * 1 은 판매제품
      * 2 는 구매자 검색
+     * 3 은 날짜
+     * 4 는 상태
      * */
     @GetMapping(value = "search")
     public ResponseEntity<List> searchReservation(@RequestParam int filter,
@@ -91,6 +93,12 @@ public class ReservationController {
             return new ResponseEntity<>(reservationService.findSearchNickName(shoppingMallId,word), HttpStatus.OK);
         }
 
+        if(filter == 3){
+            return null;
+        }
+        if(filter == 4){
+            return null;
+        }
         // 필터 없거나 word가 없으면 그냥 전체를 보내주기
         return new ResponseEntity<>(reservationService.findAllReservationByShoppingMallId(shoppingMallId), HttpStatus.OK);
     }
