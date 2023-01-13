@@ -4,6 +4,7 @@ import com.example.auctionseller.model.ProductModel;
 import com.example.auctionseller.model.ReservationDetailsModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<ReservationDetailsModel, Integer> {
@@ -16,4 +17,5 @@ public interface ReservationRepository extends JpaRepository<ReservationDetailsM
 
     List<ReservationDetailsModel> findAllByShoppingMallIdAndProductId_ProductNameLike(int shoppingMallId, String productName);
 
+    List<ReservationDetailsModel> findAllByCreateDateBetween(Timestamp startTime,Timestamp endTime);
 }

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 
@@ -83,6 +84,8 @@ public class ReservationController {
     @GetMapping(value = "search")
     public ResponseEntity<List> searchReservation(@RequestParam int filter,
                                                   @RequestParam String word,
+                                                  @RequestParam Timestamp start,
+                                                  @RequestParam Timestamp end,
                                                   @RequestParam int shoppingMallId){
 
         if(filter ==1 && word.length() > 0 ){
@@ -94,7 +97,7 @@ public class ReservationController {
         }
 
         if(filter == 3){
-            return null;
+            return new ResponseEntity<>(reservationService.findSearchCreateDateBetween(start,end), HttpStatus.OK);
         }
         if(filter == 4){
             return null;

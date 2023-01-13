@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -115,6 +116,11 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public List<ReservationDetailsModel> findSearchProductName(int shoppingMallId,String word){
         return reservationRepository.findAllByShoppingMallIdAndProductId_ProductNameLike(shoppingMallId, "%"+word+"%");
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReservationDetailsModel> findSearchCreateDateBetween(Timestamp start,Timestamp end){
+        return reservationRepository.findAllByCreateDateBetween(start,end);
     }
 
 
