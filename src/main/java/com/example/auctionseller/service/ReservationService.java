@@ -119,8 +119,14 @@ public class ReservationService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReservationDetailsModel> findSearchCreateDateBetween(Timestamp start,Timestamp end){
-        return reservationRepository.findAllByCreateDateBetween(start,end);
+    public List<ReservationDetailsModel> findSearchCreateDateBetween(Timestamp start,Timestamp end,int shoppingMallId){
+        return reservationRepository.findAllByShoppingMallIdAndCreateDateBetween(shoppingMallId,start,end);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReservationDetailsModel> findSearchState(int shoppingMallId, String searchProductState){
+
+        return reservationRepository.findAllByShoppingMallIdAndReservationStatus(shoppingMallId,ReservationStatus.valueOf(searchProductState));
     }
 
 

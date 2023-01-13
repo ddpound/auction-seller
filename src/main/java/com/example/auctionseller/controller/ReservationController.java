@@ -86,6 +86,7 @@ public class ReservationController {
                                                   @RequestParam String word,
                                                   @RequestParam Timestamp start,
                                                   @RequestParam Timestamp end,
+                                                  @RequestParam String searchProductState,
                                                   @RequestParam int shoppingMallId){
 
         if(filter ==1 && word.length() > 0 ){
@@ -97,10 +98,10 @@ public class ReservationController {
         }
 
         if(filter == 3){
-            return new ResponseEntity<>(reservationService.findSearchCreateDateBetween(start,end), HttpStatus.OK);
+            return new ResponseEntity<>(reservationService.findSearchCreateDateBetween(start,end,shoppingMallId), HttpStatus.OK);
         }
         if(filter == 4){
-            return null;
+            return new ResponseEntity<>(reservationService.findSearchState(shoppingMallId,searchProductState), HttpStatus.OK);
         }
         // 필터 없거나 word가 없으면 그냥 전체를 보내주기
         return new ResponseEntity<>(reservationService.findAllReservationByShoppingMallId(shoppingMallId), HttpStatus.OK);

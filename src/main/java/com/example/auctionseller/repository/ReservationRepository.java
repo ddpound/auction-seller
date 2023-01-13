@@ -2,6 +2,7 @@ package com.example.auctionseller.repository;
 
 import com.example.auctionseller.model.ProductModel;
 import com.example.auctionseller.model.ReservationDetailsModel;
+import com.example.auctionseller.model.enums.ReservationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.sql.Timestamp;
@@ -17,5 +18,7 @@ public interface ReservationRepository extends JpaRepository<ReservationDetailsM
 
     List<ReservationDetailsModel> findAllByShoppingMallIdAndProductId_ProductNameLike(int shoppingMallId, String productName);
 
-    List<ReservationDetailsModel> findAllByCreateDateBetween(Timestamp startTime,Timestamp endTime);
+    List<ReservationDetailsModel> findAllByShoppingMallIdAndCreateDateBetween(int shoppingMallId,Timestamp startTime,Timestamp endTime);
+
+    List<ReservationDetailsModel> findAllByShoppingMallIdAndReservationStatus(int shoppingMallId, ReservationStatus reservationStatus);
 }
