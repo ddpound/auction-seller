@@ -80,13 +80,13 @@ public class ReservationService {
     }
 
     @Transactional
-    public int deleteReservation(ReservationDetailsModel reservationDetailsModel){
+    public int deleteReservation(int reservationId){
 
         Optional<ReservationDetailsModel> findReservationDetailsModel =
-                reservationRepository.findById(reservationDetailsModel.getId());
+                reservationRepository.findById(reservationId);
 
         if(findReservationDetailsModel.isPresent()){
-            reservationRepository.delete(reservationDetailsModel);
+            reservationRepository.delete(findReservationDetailsModel.get());
             return 1;
         }else {
             return -1;

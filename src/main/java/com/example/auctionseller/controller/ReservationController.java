@@ -50,6 +50,19 @@ public class ReservationController {
         return new ResponseEntity<String>("fail save", HttpStatus.BAD_REQUEST);
     }
 
+    @DeleteMapping(value = "delete-reservation")
+    public ResponseEntity<String> deleteReservationDetails(@RequestParam int reservationId){
+
+        int resultNum = reservationService.deleteReservation(reservationId);
+
+        if(resultNum ==1 ){
+            return new ResponseEntity<String>("save success", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<String>("fail save", HttpStatus.BAD_REQUEST);
+    }
+
+
 
     @PostMapping(value = "change-reservation/{status}")
     public ResponseEntity<String> changeReservationStatus(@RequestBody ReservationDetailsModel reservationDetailsModel,
