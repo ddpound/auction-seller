@@ -3,6 +3,7 @@ package com.example.auctionseller.controller;
 
 import com.example.auctionseller.model.ReservationDetailsModel;
 import com.example.auctionseller.model.frontdto.ReservationDetails;
+import com.example.auctionseller.model.frontdto.ReservationStatusDto;
 import com.example.auctionseller.model.frontdto.SearchingDto;
 import com.example.auctionseller.service.ReservationService;
 import lombok.RequiredArgsConstructor;
@@ -50,16 +51,16 @@ public class ReservationController {
         return new ResponseEntity<String>("fail save", HttpStatus.BAD_REQUEST);
     }
 
-    @DeleteMapping(value = "delete-reservation")
-    public ResponseEntity<String> deleteReservationDetails(@RequestParam int reservationId){
+    @DeleteMapping(value = "delete-reservation/{reservationId}")
+    public ResponseEntity<String> deleteReservationDetails(@PathVariable int reservationId){
 
         int resultNum = reservationService.deleteReservation(reservationId);
 
         if(resultNum ==1 ){
-            return new ResponseEntity<String>("save success", HttpStatus.OK);
+            return new ResponseEntity<String>("delete success", HttpStatus.OK);
         }
 
-        return new ResponseEntity<String>("fail save", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<String>("fail delete", HttpStatus.BAD_REQUEST);
     }
 
 
@@ -85,6 +86,19 @@ public class ReservationController {
             return new ResponseEntity<String>("Sorry fail change reservation status", HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @PostMapping(value = "change-reservation-list")
+    public ResponseEntity<String> changeReservationStatusList(@RequestBody ReservationStatusDto reservationList){
+
+        int resultNum = reservationService.changeStatusReservationList(reservationList.getReservationList(), reservationList.getStatus());
+
+        if(resultNum == 1){
+            return new ResponseEntity<String>("status change success", HttpStatus.OK);
+        }else{
+
+            return new ResponseEntity<String>("fail change status", HttpStatus.BAD_REQUEST);
+        }
     }
 
     // 원하는 검색어와 필터를 가져오기

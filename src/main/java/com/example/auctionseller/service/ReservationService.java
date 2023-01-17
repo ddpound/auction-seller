@@ -85,10 +85,15 @@ public class ReservationService {
         Optional<ReservationDetailsModel> findReservationDetailsModel =
                 reservationRepository.findById(reservationId);
 
-        if(findReservationDetailsModel.isPresent()){
-            reservationRepository.delete(findReservationDetailsModel.get());
-            return 1;
-        }else {
+        try{
+            if(findReservationDetailsModel.isPresent()){
+                reservationRepository.delete(findReservationDetailsModel.get());
+                return 1;
+            }else {
+                // not found
+                return -3;
+            }
+        }catch (Exception e){
             return -1;
         }
     }
@@ -106,6 +111,24 @@ public class ReservationService {
         }else {
             return -1;
         }
+    }
+
+    @Transactional
+    public int changeStatusReservationList(List<Integer> reservationIdList,int status){
+
+        for (int i: reservationIdList
+             ) {
+            Optional<ReservationDetailsModel> findReservation =
+                    reservationRepository.findById(i);
+            if(findReservation.isPresent()){
+                findReservation.get().setReservationStatus(ReservationStatus.values()[status]);
+            }else {
+                return -1;
+            }
+
+        }
+
+        return 1;
     }
 
     @Transactional(readOnly = true)
