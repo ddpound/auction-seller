@@ -68,12 +68,6 @@ public class ReservationController {
     @PostMapping(value = "change-reservation/{status}")
     public ResponseEntity<String> changeReservationStatus(@RequestBody ReservationDetailsModel reservationDetailsModel,
                                                           @PathVariable int status){
-        System.out.println(reservationDetailsModel.getBuyerId());
-        System.out.println(reservationDetailsModel.getBuyerNickName());
-        System.out.println(reservationDetailsModel.getShoppingMallId());
-        System.out.println(reservationDetailsModel.getId());
-        System.out.println(reservationDetailsModel);
-        System.out.println(status);
 
         int resultNum = reservationService.changeStatusReservation(reservationDetailsModel,status);
 

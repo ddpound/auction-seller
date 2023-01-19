@@ -99,6 +99,26 @@ public class ReservationService {
     }
 
     @Transactional
+    public int deleteReservationList(int reservationId){
+
+        Optional<ReservationDetailsModel> findReservationDetailsModel =
+                reservationRepository.findById(reservationId);
+
+        try{
+            if(findReservationDetailsModel.isPresent()){
+                reservationRepository.delete(findReservationDetailsModel.get());
+                return 1;
+            }else {
+                // not found
+                return -3;
+            }
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
+
+    @Transactional
     public int changeStatusReservation(ReservationDetailsModel reservationDetailsModel,
                                        int status){
 
