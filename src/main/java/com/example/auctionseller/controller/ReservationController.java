@@ -60,6 +60,26 @@ public class ReservationController {
             return new ResponseEntity<String>("delete success", HttpStatus.OK);
         }
 
+        if(resultNum == -3){
+            return new ResponseEntity<String>("not found reservation", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<String>("fail delete", HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping(value = "delete-reservation-list")
+    public ResponseEntity<String> deleteReservationDetailList(@RequestBody ReservationStatusDto reservationList){
+
+        int resultNum = reservationService.deleteReservationList(reservationList.getReservationList());
+
+        if(resultNum ==1 ){
+            return new ResponseEntity<String>("delete reservationList success", HttpStatus.OK);
+        }
+
+        if(resultNum == -3){
+            return new ResponseEntity<String>("not found reservation", HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<String>("fail delete", HttpStatus.BAD_REQUEST);
     }
 

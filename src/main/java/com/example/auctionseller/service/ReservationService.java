@@ -31,19 +31,19 @@ public class ReservationService {
     private final ProductService productService;
 
     @Transactional(readOnly = true)
-    public List<ReservationDetailsModel> findAllReservationByShoppingMallId(int shoppingMallId){
+    public List<ReservationDetailsModel> findAllReservationByShoppingMallId(int shoppingMallId) {
         return reservationRepository.findAllByShoppingMallId(shoppingMallId);
     }
 
 
     @Transactional
-    public int saveReservation(ReservationDetails reservationDetails){
+    public int saveReservation(ReservationDetails reservationDetails) {
 
         Optional<ProductModel> productModel = productService.findProduct(reservationDetails.getProductId());
 
         List<OptionDto> optionDtoList = reservationDetails.getOptionList();
 
-        if(productModel.isPresent()){
+        if (productModel.isPresent()) {
 
             ReservationDetailsModel reservationDetailsModel =
                     ReservationDetailsModel.builder()
@@ -80,39 +80,39 @@ public class ReservationService {
     }
 
     @Transactional
-    public int deleteReservation(int reservationId){
+    public int deleteReservation(int reservationId) {
 
         Optional<ReservationDetailsModel> findReservationDetailsModel =
                 reservationRepository.findById(reservationId);
 
-        try{
-            if(findReservationDetailsModel.isPresent()){
+        try {
+            if (findReservationDetailsModel.isPresent()) {
                 reservationRepository.delete(findReservationDetailsModel.get());
                 return 1;
-            }else {
+            } else {
                 // not found
                 return -3;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             return -1;
         }
     }
 
     @Transactional
-    public int deleteReservationList(int reservationId){
+    public int deleteReservationList(List<Integer> reservationIdList) {
 
-        Optional<ReservationDetailsModel> findReservationDetailsModel =
-                reservationRepository.findById(reservationId);
+        try {
+            for (int i : reservationIdList
+            ) {
+                Optional<ReservationDetailsModel> findReservationDetailsModel =
+                        reservationRepository.findById(i);
 
-        try{
-            if(findReservationDetailsModel.isPresent()){
-                reservationRepository.delete(findReservationDetailsModel.get());
-                return 1;
-            }else {
-                // not found
-                return -3;
+                findReservationDetailsModel.ifPresent(reservationRepository::delete);
+
             }
-        }catch (Exception e){
+            // 정상작동
+            return 1;
+        } catch (Exception e) {
             return -1;
         }
     }
