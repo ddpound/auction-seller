@@ -21,4 +21,7 @@ public interface ReservationRepository extends JpaRepository<ReservationDetailsM
     List<ReservationDetailsModel> findAllByShoppingMallIdAndCreateDateBetween(int shoppingMallId,Timestamp startTime,Timestamp endTime);
 
     List<ReservationDetailsModel> findAllByShoppingMallIdAndReservationStatus(int shoppingMallId, ReservationStatus reservationStatus);
+
+
+    List<ReservationDetailsModel> findAllByBuyerId(int buyerId);
 }

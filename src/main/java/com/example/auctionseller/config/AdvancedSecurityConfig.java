@@ -4,6 +4,7 @@ package com.example.auctionseller.config;
 import com.example.auctionseller.filter.LocalHostCheckFilter;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,7 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 @Configuration
 public class AdvancedSecurityConfig {
 
-
+    @Value("${securityIpAddress.AuthorizedAddress}")
+    private String authorizedAddress;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
@@ -39,8 +41,6 @@ public class AdvancedSecurityConfig {
 
     private final CorsFilter corsFilter;
 
-
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -51,7 +51,7 @@ public class AdvancedSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http , AuthenticationManager authenticationManager, HttpServletRequest request) throws Exception {
         http
                 .authorizeRequests()
-                .anyRequest().hasIpAddress("192.168.219.106")
+                .anyRequest().hasIpAddress(authorizedAddress)
                 //.anyRequest().permitAll()
                 .and()
                 // cors config 클래스로 설정을 줄꺼여서 그냥 이대로 주석처리
