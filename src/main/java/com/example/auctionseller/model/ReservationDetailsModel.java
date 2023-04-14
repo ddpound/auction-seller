@@ -1,6 +1,7 @@
 package com.example.auctionseller.model;
 
 
+import com.example.auctionseller.model.enums.BillStatus;
 import com.example.auctionseller.model.enums.ReservationStatus;
 import com.example.auctionseller.model.frontdto.OptionDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -50,13 +51,13 @@ public class ReservationDetailsModel {
     
     private ReservationStatus reservationStatus;
 
+    // 계산서 요청
+    private BillStatus billStatus;
+
     @OneToMany(mappedBy = "reservationId" ,fetch = FetchType.LAZY)
     private List<ReservationOption> options;
 
     @CreationTimestamp
     private Timestamp createDate;
-
-
-
 
 }
