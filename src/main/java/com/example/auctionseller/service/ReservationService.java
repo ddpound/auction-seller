@@ -36,14 +36,29 @@ public class ReservationService {
     }
 
 
+    /**
+     * 구매시 이미 산 제품이 중복이 있다면 수량만 업그레이드
+     * */
     @Transactional
     public int saveReservation(ReservationDetails reservationDetails) {
 
         Optional<ProductModel> productModel = productService.findProduct(reservationDetails.getProductId());
 
+
+
         List<OptionDto> optionDtoList = reservationDetails.getOptionList();
 
         if (productModel.isPresent()) {
+
+            ReservationDetailsModel findReservationDetailsModel
+                    = reservationRepository.findByProductIdAndBuyerId(productModel.get(),reservationDetails.getBuyerId());
+
+
+            // 즉 이미 있는 제품 구매 내역이라면
+            // 이미 수량이 0보다 크다면, 수량이 있다면
+            if(findReservationDetailsModel.getQuantity() > 0){
+
+            }
 
             ReservationDetailsModel reservationDetailsModel =
                     ReservationDetailsModel.builder()
@@ -77,6 +92,17 @@ public class ReservationService {
         }
 
         return 1;
+    }
+
+    @Transactional
+    public boolean checkReservation(ReservationDetails reservationDetails){
+
+        Optional<ProductModel> productModel = productService.findProduct(reservationDetails.getProductId());
+
+        ReservationDetailsModel findReservationDetailsModel
+                = reservationRepository.findByProductIdAndBuyerId(productModel.get(),reservationDetails.getBuyerId());
+
+        return findReservationDetailsModel.getQuantity() > 0;
     }
 
     @Transactional

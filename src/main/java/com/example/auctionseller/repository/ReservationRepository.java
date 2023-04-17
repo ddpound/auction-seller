@@ -24,4 +24,6 @@ public interface ReservationRepository extends JpaRepository<ReservationDetailsM
 
 
     List<ReservationDetailsModel> findAllByBuyerId(int buyerId);
+
+    ReservationDetailsModel findByProductIdAndBuyerId(ProductModel productModel,int buyerId);
 }

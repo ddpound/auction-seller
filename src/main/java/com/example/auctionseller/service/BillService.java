@@ -7,6 +7,8 @@ import com.example.auctionseller.repository.BillRepository;
 import com.example.auctionseller.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,20 +23,18 @@ public class BillService {
 
     private final BillRepository billRepository;
 
-
-
     /**
      * 청구서 요청
      * */
     @Transactional
-    public String requestBill(int id){
+    public ResponseEntity<String> requestBill(int id){
 
         Optional<ReservationDetailsModel> findReservationModel = reservationRepository.findById(id);
 
         findReservationModel.ifPresent(reservationDetailsModel -> reservationDetailsModel.setBillStatus(BillStatus.입금요청));
 
 
-        return "";
+        return new ResponseEntity<>("success bill status change", HttpStatus.OK);
     }
 
 

@@ -39,6 +39,9 @@ public class ReservationController {
     }
 
 
+    /**
+     * 유저가 구매내역을 저장
+     * */
     @PostMapping(value = "save-reservation")
     public ResponseEntity<String> saveReservationDetails(@RequestBody ReservationDetails reservationDetails){
 
