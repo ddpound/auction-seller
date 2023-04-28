@@ -1,15 +1,20 @@
 package com.example.auctionseller.service;
 
 import com.auth0.jwt.JWT;
+import com.example.auctionseller.config.MyTokenProperties;
 import com.example.auctionseller.model.ShoppingMallModel;
 import com.example.auctionseller.repository.ProductModelRepository;
 import com.example.auctionseller.repository.ShoppingMallModelRepositry;
 import com.example.auctionseller.sellercommon.SellerReturnTokenUsername;
+import com.example.auctionseller.userinterface.AuctionUserInterFace;
+import com.example.modulecommon.frontModel.UserModelFront;
+import com.example.modulecommon.jwtutil.CookieJWTUtil;
 import com.example.modulecommon.jwtutil.JWTUtil;
 import com.example.modulecommon.makefile.MakeFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,11 +32,13 @@ public class ShoppingMallService {
 
     private final MakeFile makeFile;
 
-    private final JWTUtil jwtUtil;
+    private final CookieJWTUtil cookieJWTUtil;
 
     private final SellerReturnTokenUsername sellerReturnTokenUsername;
 
-    private final ProductModelRepository productModelRepository;
+    private final MyTokenProperties myTokenProperties;
+
+    private final AuctionUserInterFace auctionUserInterFace;
 
     /**
      * 새로운 쇼핑몰을 만드는 서비스단
@@ -45,12 +52,22 @@ public class ShoppingMallService {
                                    String shoppingMallExplanation,
                                    HttpServletRequest request) {
 
-        String jwtHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String token = jwtHeader.replace("Bearer ", "");
 
-        // 따옴표로 저장됨
-        String username = JWT.decode(token).getClaim("username").toString().replaceAll("\"", "");;
+
+        String token = cookieJWTUtil.requestListCookieGetString(myTokenProperties.getJWT_COOKIE_NAME(), request);
+
         int userId = JWT.decode(token).getClaim("userId").asInt();
+
+        ResponseEntity<UserModelFront> userModel = auctionUserInterFace.findUserModelFront(myTokenProperties.getJWT_COOKIE_NAME()+"="+token,userId);
+
+
+
+        if(userModel.getBody() == null){
+            return -4; // username 이 없음
+        }
+
+        String username = userModel.getBody().getUserName();
+
         // 12길이보다 길면
         if(shoppingmallName.length() > 12){
             return -5;

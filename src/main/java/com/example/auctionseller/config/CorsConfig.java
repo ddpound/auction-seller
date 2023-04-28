@@ -6,6 +6,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
+
 @Configuration
 public class CorsConfig {
     // 스프링 시큐리티가 들고있는 cors 필터입니다.
@@ -20,7 +22,7 @@ public class CorsConfig {
         config.setAllowCredentials(true);
 
         // 지금 코드가 위의 setAloowCredentials 와 같이 사용되는걸 권장한다
-        config.addAllowedOriginPattern("*");
+        config.addAllowedOriginPattern("http://localhost:3000");
         // 재밌는 점은 아래 코드는 이제 위의 setAllowCredentials 와 함께 사용하는걸
         // 권장하지 않는다
         //config.addAllowedOrigin("*"); // 모든 ip 응답을 허용
@@ -28,10 +30,12 @@ public class CorsConfig {
         // 해당 헤더를 모두 허용해줘야 프론트에서 확인받아서 체크할수있다.
 
         // jwt 를 담은 헤더를 리액트 쪽에서 확인할수있다는 뜻
-        config.addExposedHeader("*");
+        config.setExposedHeaders(Arrays.asList("Authorization","RefreshToken","Set-Cookie"));
 
-        config.addAllowedHeader("*"); // 모든 헤더의 응답을 허용
-        config.addAllowedMethod("*"); // 모든 post,get 등등의 메소드들을 허용
+        config.setAllowedHeaders(Arrays.asList("Authorization","RefreshToken","Set-Cookie"));
+
+        config.setAllowedMethods(Arrays.asList("GET","PUT","POST","DELETE","OPTIONS"));
+
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

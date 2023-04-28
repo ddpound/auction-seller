@@ -24,6 +24,7 @@ public class ShoppingMallModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @Column(unique = true)
     private String shoppingMallName;
 
     private String shoppingMallExplanation;
