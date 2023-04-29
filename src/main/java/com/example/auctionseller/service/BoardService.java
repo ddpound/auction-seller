@@ -4,8 +4,11 @@ import com.example.auctionseller.model.*;
 import com.example.auctionseller.repository.*;
 import com.example.auctionseller.sellercommon.SellerReturnTokenUsername;
 import com.example.auctionseller.userinterface.AuctionUserInterFace;
+
+import com.example.modulecommon.allstatic.MyTokenProperties;
 import com.example.modulecommon.enums.AuthNames;
 import com.example.modulecommon.frontModel.UserModelFront;
+import com.example.modulecommon.jwtutil.CookieJWTUtil;
 import com.example.modulecommon.makefile.MakeFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -32,8 +35,6 @@ public class BoardService {
 
     private final SellerReturnTokenUsername sellerReturnTokenUsername;
 
-    private final ProductModelRepository productModelRepository;
-
     private final AuctionUserInterFace auctionUserInterFace;
 
     private final CommonModelRepository commonModelRepository;
@@ -44,6 +45,9 @@ public class BoardService {
 
     private final ReplyofReplyRepository replyofReplyRepository;
 
+    private final CookieJWTUtil cookieJWTUtil;
+
+    private final MyTokenProperties myTokenProperties;
 
     // 카테고리를 만들었을때 이름이 똑같으면, 알아서 만들어지도록할지..아니면...음..
     /**
@@ -175,16 +179,15 @@ public class BoardService {
     @Transactional
     public int deleteSellerBoard(int boardId, HttpServletRequest request){
 
-        String jwtHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String jwtRHeader = request.getHeader("RefreshToken");
-
-        String token = jwtHeader.replace("Bearer ", "");
+        String myCookie = cookieJWTUtil
+                .requestListCookieGetString(myTokenProperties.getJWT_COOKIE_NAME(),request);
 
         Map<Integer, Object> returnMapUserData = sellerReturnTokenUsername.tokenGetUsername(request);
 
         // 유저의 권한을 찾아야함
         ResponseEntity<UserModelFront> userModelFront =
-                auctionUserInterFace.findUserModelFront(jwtHeader,jwtRHeader, (Integer) returnMapUserData.get(2));
+                auctionUserInterFace
+                        .findUserModelFront(myTokenProperties.getJWT_COOKIE_NAME()+"="+myCookie, (Integer) returnMapUserData.get(2));
 
         // 수정이니 이미 제품이 있으니 검사를 시도
         // 동시에 영속화
@@ -311,6 +314,8 @@ public class BoardService {
                          String userPicture,
                          int commonModelId,
                          HttpServletRequest request){
+
+
         Map<Integer, Object> returnMapUserData = sellerReturnTokenUsername.tokenGetUsername(request);
 
         Optional<CommonModel> findCommonModel =  commonModelRepository.findById(commonModelId);
@@ -368,8 +373,8 @@ public class BoardService {
     @Transactional
     public int deleteReply(int replyId, HttpServletRequest request){
 
-        String jwtHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String jwtRHeader = request.getHeader("RefreshToken");
+        String myCookie = cookieJWTUtil
+                .requestListCookieGetString(myTokenProperties.getJWT_COOKIE_NAME(),request);
 
         Map<Integer, Object> returnMapUserData = sellerReturnTokenUsername.tokenGetUsername(request);
 
@@ -377,7 +382,8 @@ public class BoardService {
 
 
         // 관리자인지 유저인지를 파악하기위해
-        ResponseEntity<UserModelFront> responseFindUserModelFront = auctionUserInterFace.findUserModelFront(jwtHeader,jwtRHeader,(Integer)returnMapUserData.get(2));
+        ResponseEntity<UserModelFront> responseFindUserModelFront = auctionUserInterFace
+                .findUserModelFront(myTokenProperties.getJWT_COOKIE_NAME()+"="+myCookie,(Integer)returnMapUserData.get(2));
 
 
         if(Objects.requireNonNull(responseFindUserModelFront.getBody()).getUserName() == null){
@@ -444,16 +450,17 @@ public class BoardService {
     @Transactional
     public int deleteReplyOfReply(int replyOfReplyId, HttpServletRequest request){
 
-        String jwtHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String jwtRHeader = request.getHeader("RefreshToken");
-
         Map<Integer, Object> returnMapUserData = sellerReturnTokenUsername.tokenGetUsername(request);
+
+        String token = cookieJWTUtil
+                .requestListCookieGetString(myTokenProperties.getJWT_COOKIE_NAME(),request);
 
         Optional<CommonReplyOfReplyModel> findReplyofReplyModel = replyofReplyRepository.findById(replyOfReplyId);
 
 
         // 관리자인지 유저인지를 파악하기위해
-        ResponseEntity<UserModelFront> responseFindUserModelFront = auctionUserInterFace.findUserModelFront(jwtHeader,jwtRHeader,(Integer)returnMapUserData.get(2));
+        ResponseEntity<UserModelFront> responseFindUserModelFront = auctionUserInterFace
+                .findUserModelFront(myTokenProperties.getJWT_COOKIE_NAME()+"="+token,(Integer)returnMapUserData.get(2));
 
 
         if(Objects.requireNonNull(responseFindUserModelFront.getBody()).getUserName() == null){

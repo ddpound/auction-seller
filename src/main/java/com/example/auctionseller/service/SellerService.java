@@ -2,11 +2,12 @@ package com.example.auctionseller.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.auctionseller.config.MyTokenProperties;
+
 import com.example.auctionseller.frontmodel.ShoppingMallFront;
 import com.example.auctionseller.model.ShoppingMallModel;
 import com.example.auctionseller.repository.ShoppingMallModelRepositry;
 import com.example.auctionseller.userinterface.AuctionUserInterFace;
+import com.example.modulecommon.allstatic.MyTokenProperties;
 import com.example.modulecommon.frontModel.UserModelFront;
 import com.example.modulecommon.jwtutil.CookieJWTUtil;
 import com.example.modulecommon.jwtutil.JWTUtil;
@@ -45,8 +46,7 @@ public class SellerService {
              ) {
             System.out.println(c.getName() +" : "+c.getValue());
         }
-        System.out.println(myTokenProperties.getJWT_COOKIE_NAME() +" 토큰이름이 뭐라고?");
-        System.out.println(myTokenProperties.getREFRESH_COOKIE_NAME() +" 토큰이름이 뭐라고?");
+
 
         String cookieToken = cookieJWTUtil.requestListCookieGetString(myTokenProperties.getJWT_COOKIE_NAME(),request);
 

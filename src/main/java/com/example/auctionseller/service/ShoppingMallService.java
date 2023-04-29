@@ -1,19 +1,17 @@
 package com.example.auctionseller.service;
 
 import com.auth0.jwt.JWT;
-import com.example.auctionseller.config.MyTokenProperties;
+
 import com.example.auctionseller.model.ShoppingMallModel;
-import com.example.auctionseller.repository.ProductModelRepository;
 import com.example.auctionseller.repository.ShoppingMallModelRepositry;
 import com.example.auctionseller.sellercommon.SellerReturnTokenUsername;
 import com.example.auctionseller.userinterface.AuctionUserInterFace;
+import com.example.modulecommon.allstatic.MyTokenProperties;
 import com.example.modulecommon.frontModel.UserModelFront;
 import com.example.modulecommon.jwtutil.CookieJWTUtil;
-import com.example.modulecommon.jwtutil.JWTUtil;
 import com.example.modulecommon.makefile.MakeFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -118,7 +116,16 @@ public class ShoppingMallService {
                                   String urlFilePath,
                                   HttpServletRequest request){
 
-        Map<Integer,Object> returnmap = sellerReturnTokenUsername.tokenGetUsername(request);
+        String token = cookieJWTUtil.requestListCookieGetString(myTokenProperties.getJWT_COOKIE_NAME(), request);
+
+        int userId = JWT.decode(token).getClaim("userId").asInt();
+
+        ResponseEntity<UserModelFront> userModel = auctionUserInterFace.findUserModelFront(myTokenProperties.getJWT_COOKIE_NAME()+"="+token,userId);
+
+        // 12길이보다 길면
+        if(userModel.getBody() == null){
+            return -3;
+        }
 
         // 12길이보다 길면
         if(shoppingMallName.length() > 12){
@@ -127,7 +134,7 @@ public class ShoppingMallService {
 
         // 해당유저가 이미 쇼핑몰이 있다는 가정 하에
         // 영속화
-        ShoppingMallModel shoppingMallModel1ByUserModel = shoppingMallModelRepositry.findByUsername((String) returnmap.get(1));
+        ShoppingMallModel shoppingMallModel1ByUserModel = shoppingMallModelRepositry.findByUsername((String) userModel.getBody().getUserName());
 
         // 사진이 달라졌을경우 삭제 후 추가
         // 그대로라면 그냥 그대로
@@ -145,7 +152,7 @@ public class ShoppingMallService {
             // 새로운 파일저장 입니다.
             // 1. url 사진 경로
             // 2. 컴퓨터 사진 파일 경로
-            Map<Integer,String> fileNames =makeFile.makeFileImage((Integer) returnmap.get(2), multipartFile,request);
+            Map<Integer,String> fileNames =makeFile.makeFileImage(userModel.getBody().getId(), multipartFile,request);
             shoppingMallModel1ByUserModel.setThumbnailUrlPath(fileNames.get(1));
             shoppingMallModel1ByUserModel.setThumbnailFilePath(fileNames.get(2));
         }

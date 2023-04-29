@@ -2,8 +2,8 @@ package com.example.auctionseller.sellercommon;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.auctionseller.config.MyTokenProperties;
 import com.example.auctionseller.userinterface.AuctionUserInterFace;
+import com.example.modulecommon.allstatic.MyTokenProperties;
 import com.example.modulecommon.frontModel.UserModelFront;
 import com.example.modulecommon.jwtutil.CookieJWTUtil;
 import com.example.modulecommon.jwtutil.JWTUtil;
@@ -67,7 +67,8 @@ public class SellerReturnTokenUsername {
         Map<Integer, Object> returnMap = new HashMap();
 
         // 더이상 claim에 username은 없어서 여기서 repository로 받아와 주기만 하면될듯
-        ResponseEntity<UserModelFront> userdata = auctionUserInterFace.findUserModelFront(userid);
+        ResponseEntity<UserModelFront> userdata = auctionUserInterFace
+                .findUserModelFront(myTokenProperties.getJWT_COOKIE_NAME()+"="+cookieToken, userid);
 
         if(userdata.getBody() != null ){
             returnMap.put(1, userdata.getBody().getUserName());

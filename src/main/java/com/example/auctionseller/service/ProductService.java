@@ -5,13 +5,13 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.auctionseller.model.ProductModel;
 import com.example.auctionseller.model.ProductOption;
 import com.example.auctionseller.model.ShoppingMallModel;
-import com.example.auctionseller.repository.ProductModelRepository;
-import com.example.auctionseller.repository.ProductOptionRepositry;
-import com.example.auctionseller.repository.ShoppingMallModelRepositry;
+import com.example.auctionseller.repository.*;
 import com.example.auctionseller.sellercommon.SellerReturnTokenUsername;
 import com.example.auctionseller.userinterface.AuctionUserInterFace;
+import com.example.modulecommon.allstatic.MyTokenProperties;
 import com.example.modulecommon.enums.AuthNames;
 import com.example.modulecommon.frontModel.UserModelFront;
+import com.example.modulecommon.jwtutil.CookieJWTUtil;
 import com.example.modulecommon.jwtutil.JWTUtil;
 import com.example.modulecommon.makefile.MakeFile;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +36,6 @@ public class ProductService {
 
     private final MakeFile makeFile;
 
-    private final JWTUtil jwtUtil;
-
     private final SellerReturnTokenUsername sellerReturnTokenUsername;
 
     private final ProductModelRepository productModelRepository;
@@ -45,6 +43,14 @@ public class ProductService {
     private final AuctionUserInterFace auctionUserInterFace;
 
     private final ProductOptionRepositry productOptionRepositry;
+
+    private final ReservationRepository reservationRepository;
+
+    private final ReservationOptionRepository reservationOptionRepository;
+
+    private final CookieJWTUtil cookieJWTUtil;
+
+    private final MyTokenProperties myTokenProperties;
 
     @Transactional
     public int saveProduct(Integer ProductID,
@@ -252,24 +258,23 @@ public class ProductService {
         return productModelRepository.findById(id);
     }
 
+    // 제품을 삭제하면 구매 내역도 전부 삭제해야함
     @Transactional
     public int deleteProduct(int productId, HttpServletRequest request){
 
 
-        String jwtHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String jwtRHeader = request.getHeader("RefreshToken");
-
-        String token = jwtHeader.replace("Bearer ", "");
-        //String reToken = jwtRHeader.replace("Bearer ", "");
+        String token = cookieJWTUtil
+                .requestListCookieGetString(myTokenProperties.getJWT_COOKIE_NAME(),request);
 
         DecodedJWT decodedJWT = JWT.decode(token);
 
         ResponseEntity<UserModelFront> findFrontUserModel = auctionUserInterFace
-                .findUserModelFront(jwtHeader,jwtRHeader,decodedJWT.getClaim("userId").asInt());
+                .findUserModelFront(myTokenProperties.getJWT_COOKIE_NAME()+"="+token,decodedJWT.getClaim("userId").asInt());
 
         // 수정이니 이미 제품이 있으니 검사를 시도
         // 동시에 영속화
         Optional<ProductModel> productModel = productModelRepository.findById(productId);
+
 
         if(productModel.isEmpty()){
             log.info("not found Product, found try id :" + productId);
@@ -304,6 +309,10 @@ public class ProductService {
         if(productModel.get().getFilefolderPath().length() >0){
             makeFile.folderPathImageDelete(productModel.get().getFilefolderPath());
         }
+
+
+        reservationOptionRepository.deleteAllByProductId(productModel.get().getId());
+        reservationRepository.deleteAllByProductId(productModel.get());
 
         //마지막 단계에 삭제
         productModelRepository.delete(productModel.get());
