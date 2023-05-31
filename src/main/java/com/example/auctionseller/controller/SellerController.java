@@ -39,8 +39,6 @@ public class SellerController {
                                                                       @PathVariable int shuserId) {
 
         // 중간에 검증과정이 있어야함
-
-
         return new ResponseEntity(subScriberService.findAllSubsciberRequestMessage(shuserId,request), HttpStatus.OK);
     }
 

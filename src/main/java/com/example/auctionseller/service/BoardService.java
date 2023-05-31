@@ -457,7 +457,6 @@ public class BoardService {
 
         Optional<CommonReplyOfReplyModel> findReplyofReplyModel = replyofReplyRepository.findById(replyOfReplyId);
 
-
         // 관리자인지 유저인지를 파악하기위해
         ResponseEntity<UserModelFront> responseFindUserModelFront = auctionUserInterFace
                 .findUserModelFront(myTokenProperties.getJWT_COOKIE_NAME()+"="+token,(Integer)returnMapUserData.get(2));

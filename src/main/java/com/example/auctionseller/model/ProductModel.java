@@ -20,7 +20,6 @@ import java.util.List;
 @Entity
 public class ProductModel {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -52,14 +51,13 @@ public class ProductModel {
     private String pictureUrlPath;
 
     // 이미지파일이 저장된 고유 폴더 경로
-    @Column(length = 500)
+    @Column(length = 1000)
     private String filefolderPath;
 
     @OneToMany(mappedBy = "productId" ,fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"productId"})
     @JsonManagedReference
     List<ProductOption> productOptionList;
-
 
     @CreationTimestamp
     private Timestamp createDate;

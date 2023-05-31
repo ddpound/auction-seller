@@ -36,6 +36,9 @@ public class ShoppingMallModel {
     @JsonIgnore
     private String username;
 
+    @Column(unique = true , nullable = false)
+    private String nickname;
+
     // 사진 경로를 남길듯
     @Column(length = 1000)
     private String thumbnailUrlPath;

@@ -43,6 +43,7 @@ public class ShoppingMallController {
                                              @RequestParam("thumbnail") MultipartFile multipartFile,
                                              @RequestParam("explantion") String shoppingMallExplanation,
                                              HttpServletRequest request) throws IOException {
+        log.info("try save shopping Mall : " + shoppingmallName);
 
         int resultNum = shoppingMallService.SaveNewShoppingMall(multipartFile,
                 shoppingmallName,

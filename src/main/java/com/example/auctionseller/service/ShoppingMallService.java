@@ -71,7 +71,6 @@ public class ShoppingMallService {
             return -5;
         }
 
-
         ShoppingMallModel shoppingMallModel = shoppingMallModelRepositry.findByShoppingMallName(shoppingmallName);
 
         if(shoppingMallModel != null ){
@@ -92,11 +91,14 @@ public class ShoppingMallService {
                         .thumbnailUrlPath(fileNames.get(1))
                         .thumbnailFilePath(fileNames.get(2))
                         .filefolderPath(fileNames.get(3))
+                        .nickname(userModel.getBody().getNickName())
                         .userId(userId)
                         .username(username)
                         .build();
 
         shoppingMallModelRepositry.save(shoppingMallModelSave);
+        log.info("success shopping mall :" + shoppingMallModelSave.getShoppingMallName());
+        log.info("success shopping mall :" + shoppingMallModelSave.getId());
 
         return 1;
     }

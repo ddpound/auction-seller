@@ -1,5 +1,6 @@
 package com.example.auctionseller.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -10,6 +11,22 @@ import java.util.Arrays;
 
 @Configuration
 public class CorsConfig {
+
+    @Value("${securityIpAddress.AuthorizedAddress}")
+    private String ipPort;
+
+    @Value("${domainName.test}")
+    private String ALLOWED_ORIGIN1;
+
+    @Value("${domainName.real}")
+    private String ALLOWED_ORIGIN2;
+
+    @Value("${domainName.stest}")
+    private String ALLOWED_ORIGIN3;
+
+    @Value("${domainName.sreal}")
+    private String ALLOWED_ORIGIN4;
+
     // 스프링 시큐리티가 들고있는 cors 필터입니다.
     // 프론트쪽에서 계속 막힌게 이녀석 때문
     @Bean
@@ -21,8 +38,29 @@ public class CorsConfig {
         // 내 서버 데이터 응답시 json을 자바 스크립트에서 처리할수 있도록
         config.setAllowCredentials(true);
 
-        // 지금 코드가 위의 setAloowCredentials 와 같이 사용되는걸 권장한다
-        config.addAllowedOriginPattern("http://localhost:3000");
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.contains("win")){
+            // 지금 코드가 위의 setAloowCredentials 와 같이 사용되는걸 권장한다
+            config.addAllowedOriginPattern("http://localhost:3000");
+
+//            config.addAllowedOriginPattern("http://"+ipPort+":3000");
+//            config.addAllowedOriginPattern(ALLOWED_ORIGIN1);
+//            config.addAllowedOriginPattern(ALLOWED_ORIGIN3);
+//            config.addAllowedOriginPattern(ALLOWED_ORIGIN1+":3000");
+//            config.addAllowedOriginPattern(ALLOWED_ORIGIN3+":3000");
+
+        }else{
+            config.addAllowedOriginPattern(ALLOWED_ORIGIN1);
+            config.addAllowedOriginPattern(ALLOWED_ORIGIN3);
+            config.addAllowedOriginPattern(ALLOWED_ORIGIN1+":3000");
+            config.addAllowedOriginPattern(ALLOWED_ORIGIN3+":3000");
+        }
+
+
+
+
+
+
         // 재밌는 점은 아래 코드는 이제 위의 setAllowCredentials 와 함께 사용하는걸
         // 권장하지 않는다
         //config.addAllowedOrigin("*"); // 모든 ip 응답을 허용

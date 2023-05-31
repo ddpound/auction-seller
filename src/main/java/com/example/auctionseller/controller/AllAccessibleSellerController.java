@@ -8,15 +8,19 @@ import com.example.auctionseller.model.frontdto.FrontShppingMallDto;
 import com.example.auctionseller.service.ShoppingMallService;
 import com.example.auctionseller.service.ShoppingMallServiceAll;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
+@Log4j2
 @RequestMapping(value = "auth")
 @RestController
 public class AllAccessibleSellerController {
@@ -27,8 +31,14 @@ public class AllAccessibleSellerController {
 
     // 모든 쇼핑몰 찾기
     @GetMapping(value = "find-all-shopping-mall")
-    public ResponseEntity<List<ShoppingMallModel>> findAllShoppingMallList(){
-        return new ResponseEntity<>(shoppingMallService.findAllShoppingMallList(), HttpStatus.OK);
+    public ResponseEntity<List<FrontShppingMallDto>> findAllShoppingMallList(){
+
+        List<FrontShppingMallDto> listFrontShoppingMall = shoppingMallService.findAllShoppingMallList()
+                .stream()
+                .map(FrontShppingMallDto::new)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(listFrontShoppingMall, HttpStatus.OK);
     }
 
     // 모든 채팅 룸 찾기

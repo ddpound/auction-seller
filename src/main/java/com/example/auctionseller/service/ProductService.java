@@ -202,10 +202,6 @@ public class ProductService {
 
         makeFile.deleteTemporary((Integer) returnmap.get(2));
 
-
-
-
-
         ProductModel productModel = ProductModel.builder()
                 .productName(productName)
                 .productPrice(productPrice)
@@ -239,14 +235,10 @@ public class ProductService {
                 }
 
             }
-
-
-
         } catch (Exception e) {
             log.info(e);
             return -1; // 단순 에러
         }
-
 
         // 문제 없다면 반환 1, 여기까지왔다면 임시파일 삭제
         // 임시파일 삭제
@@ -262,61 +254,84 @@ public class ProductService {
     @Transactional
     public int deleteProduct(int productId, HttpServletRequest request){
 
+        try {
+            log.info("try product delete, product Id : " + productId);
+            Map<Integer, Object> returnMapUserData = sellerReturnTokenUsername.tokenGetUsername(request);
 
-        String token = cookieJWTUtil
-                .requestListCookieGetString(myTokenProperties.getJWT_COOKIE_NAME(),request);
+            String token = cookieJWTUtil
+                    .requestListCookieGetString(myTokenProperties.getJWT_COOKIE_NAME(),request);
 
-        DecodedJWT decodedJWT = JWT.decode(token);
+            log.info("check userId : " + returnMapUserData.get(2));
 
-        ResponseEntity<UserModelFront> findFrontUserModel = auctionUserInterFace
-                .findUserModelFront(myTokenProperties.getJWT_COOKIE_NAME()+"="+token,decodedJWT.getClaim("userId").asInt());
+            ResponseEntity<UserModelFront> findFrontUserModel = auctionUserInterFace
+                    .findUserModelFront(myTokenProperties.getJWT_COOKIE_NAME()+"="+token,(Integer) returnMapUserData.get(2));
 
-        // 수정이니 이미 제품이 있으니 검사를 시도
-        // 동시에 영속화
-        Optional<ProductModel> productModel = productModelRepository.findById(productId);
+            log.info("check find user application : " + Objects.requireNonNull(findFrontUserModel.getBody()).getUserName());
+            // 수정이니 이미 제품이 있으니 검사를 시도
+            // 동시에 영속화
+            Optional<ProductModel> productModel = productModelRepository.findById(productId);
 
-
-        if(productModel.isEmpty()){
-            log.info("not found Product, found try id :" + productId);
-            return -3; // 값이 없어요
-        }
-
-        // 삭제하려는 유저와 제품의 유저가 달라 -2를 반환
-        // 리스트의 길이가 3이 아닐때 즉 어드민이 아니면서 해당 사용자의 제품이 아니라면
-        if(productModel.get().getShoppingMall().getUsername().equals(findFrontUserModel.getBody().getUserName())
-                && findFrontUserModel.getBody().getRole().equals("ADMIN")){
-            log.info("seller not same");
-            log.info("this product seller : " + productModel.get().getShoppingMall().getUsername());
-            log.info("try seller : " + findFrontUserModel.getBody().getUserName());
-            return -2;
-        }
-
-        // 썸네일이 있을 때
-        if(productModel.get().getPictureFilePath().length() >0){
-            // 썸네일 파일 삭제
-            String filepathString = productModel.get().getPictureFilePath();
-            List<String> deleteProductFile = List.of(filepathString.substring(0, filepathString.length()-1).split(","));
-
-            for (String i:deleteProductFile
-            ) {
-                // i는 각각의 경로 그 경로를 받아와 삭제
-                makeFile.filePathImageDelete(i);
+            if(productModel.isEmpty()){
+                log.info("not found Product, found try id :" + productId);
+                return -3; // 값이 없어요
             }
 
+            // 삭제하려는 유저와 제품의 유저가 달라 -2를 반환
+            // 리스트의 길이가 3이 아닐때 즉 어드민이 아니면서 해당 사용자의 제품이 아니라면
+            if(productModel.get().getShoppingMall().getUsername().equals(findFrontUserModel.getBody().getUserName())
+                    && findFrontUserModel.getBody().getRole().equals("ADMIN")){
+                log.info("seller not same");
+                log.info("this product seller : " + productModel.get().getShoppingMall().getUsername());
+                log.info("try seller : " + findFrontUserModel.getBody().getUserName());
+                return -2;
+            }
+
+            // 썸네일이 있을 때
+            if(productModel.get().getPictureFilePath().length() >0){
+                log.info("thumbnail delete try, product board");
+
+                // 썸네일 파일 삭제
+                String filepathString = productModel.get().getPictureFilePath();
+                List<String> deleteProductFile = List.of(filepathString.substring(0, filepathString.length()-1).split(","));
+                log.info("thumbnail delete try, product board");
+
+                log.info("thumbnail tracking try, " + deleteProductFile.listIterator());
+
+                for (String i : deleteProductFile
+                     ) {
+                    log.info("thumbnail tracking try : " + i);
+                }
+
+                for (String i:deleteProductFile
+                ) {
+                    // i는 각각의 경로 그 경로를 받아와 삭제
+                    makeFile.filePathImageDelete(i);
+                }
+                log.info("thumbnail delete success, product board");
+            }
+
+            // 사진을 담아놓는 폴더 경로를 통해 파일 삭제
+            if(productModel.get().getFilefolderPath().length() >0){
+                makeFile.folderPathImageDelete(productModel.get().getFilefolderPath());
+                log.info("success image delete folder");
+            }
+
+
+            reservationOptionRepository.deleteAllByProductId(productModel.get().getId());
+            reservationRepository.deleteAllByProductId(productModel.get());
+
+            //마지막 단계에 삭제
+            productModelRepository.delete(productModel.get());
+
+            log.info("success delete product");
+            return 1;
+
+        }catch (Exception e){
+            e.printStackTrace();
+
+            return -9; // 알수없는 에러
         }
 
-        // 사진을 담아놓는 폴더 경로를 통해 파일 삭제
-        if(productModel.get().getFilefolderPath().length() >0){
-            makeFile.folderPathImageDelete(productModel.get().getFilefolderPath());
-        }
-
-
-        reservationOptionRepository.deleteAllByProductId(productModel.get().getId());
-        reservationRepository.deleteAllByProductId(productModel.get());
-
-        //마지막 단계에 삭제
-        productModelRepository.delete(productModel.get());
-        return 1;
     }
 
 }

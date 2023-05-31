@@ -21,15 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class BoardController {
 
-    private final ShoppingMallService shoppingMallService;
-
     private final BoardService boardService;
-
-    private final ProductService productService;
-
-    private final SellerReturnTokenUsername sellerReturnTokenUsername;
-
-    private final MakeFile makeFile;
 
     @PostMapping(value = "save-board/{modify}")
     public ResponseEntity saveBoard(@RequestParam("title") String title,
@@ -68,6 +60,7 @@ public class BoardController {
     @DeleteMapping(value = "delete-seller-board/{id}")
     public ResponseEntity deleteSellerBoard(@PathVariable("id")int boardId,
                                             HttpServletRequest request){
+        log.info("try delete board controller endpoint");
 
         int resultNum = boardService.deleteSellerBoard(boardId,request);
 
